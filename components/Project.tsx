@@ -1,4 +1,3 @@
-import { BsGithub } from "react-icons/bs";
 import { MdOutlineLink } from "react-icons/md";
 import Link from "next/link";
 import OgImage from "@components/OgImage";
