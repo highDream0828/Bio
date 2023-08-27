@@ -1,8 +1,3 @@
-<div align="center">
-
-![image](https://user-images.githubusercontent.com/112562504/211177865-d7f5f8f3-a25c-490e-be0d-a9aed173d261.png)
-
-</div>
 
 ## Run Locally
 
