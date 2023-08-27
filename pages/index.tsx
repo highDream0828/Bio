@@ -71,7 +71,7 @@ export default function Home() {//{ blogs }: { blogs: BlogType[] }
                   variants={opacityVariant}
                   className="font-medium text-xs md:text-sm lg:text-lg text-[#383838] dark:text-gray-200"
                 >
-                  React , C#, .Net, Python, Full stack Engineer, Machine Learning
+                  React, Angular, C#, .Net, Python, Machine Learning
                 </motion.p>
               </div>
 
@@ -80,7 +80,7 @@ export default function Home() {//{ blogs }: { blogs: BlogType[] }
                   variants={opacityVariant}
                   className=" text-[#474747] dark:text-gray-300 font-medium text-sm md:text-base text-center"
                 >
-                  I can code in Javascript, Python, C++, TS, etc.
+                  I can code in DotNet, C#, Python, JavaScript, TS, etc.
                 </motion.p>
                 <motion.hr />
                 <motion.p>

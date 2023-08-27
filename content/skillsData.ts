@@ -13,14 +13,15 @@ import {
   SiTypescript,
   SiReact,
   SiC,
-  SiFigma,
+  SiAngular,
   SiHeroku,
   SiVercel,
   SiAmazonaws,
   SiNodedotjs,
   SiNestjs,
   SiGraphql,
-  SiOpenai,
+  SiDotnet,
+  SiCsharp,
 } from "react-icons/si";
 
 const skills: SkillType[] = [
@@ -49,6 +50,10 @@ const skills: SkillType[] = [
     Icon: SiNestjs,
   },
   {
+    name: "Angular",
+    Icon: SiAngular,
+  },
+  {
     name: "React.js",
     Icon: SiReact,
   },
@@ -61,8 +66,8 @@ const skills: SkillType[] = [
     Icon: SiTailwindcss,
   },
   {
-    name: "Open AI",
-    Icon: SiOpenai,
+    name: "Dotnet",
+    Icon: SiDotnet,
   },
   {
     name: "C Programming",
@@ -105,8 +110,8 @@ const skills: SkillType[] = [
     Icon: SiVercel,
   },
   {
-    name: "Figma",
-    Icon: SiFigma,
+    name: "C#",
+    Icon: SiCsharp,
   },
 ];
 
