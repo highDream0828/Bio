@@ -26,7 +26,7 @@ export default function Home() {//{ blogs }: { blogs: BlogType[] }
   return (
     <>
       <Metadata
-        title="Alex Ritt"
+        title="Gary Shores"
         description={pageMeta.home.description}
         previewImage={pageMeta.home.image}
         keywords={pageMeta.home.keywords}
@@ -65,13 +65,13 @@ export default function Home() {//{ blogs }: { blogs: BlogType[] }
                   variants={opacityVariant}
                   className="text-5xl lg:text-6xl font-bold font-sarina"
                 >
-                  Doan Kien
+                  Gary Shores
                 </motion.h1>
                 <motion.p
                   variants={opacityVariant}
                   className="font-medium text-xs md:text-sm lg:text-lg text-[#383838] dark:text-gray-200"
                 >
-                  React , Node, Frontend Engineer, Machine Learning
+                  React , C#, .Net, Python, Full stack Engineer, Machine Learning
                 </motion.p>
               </div>
 

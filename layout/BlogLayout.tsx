@@ -127,7 +127,7 @@ export default function BlogLayout({
         <div className="flex items-center !w-full text-gray-700 dark:text-gray-300">
           <div className="flex items-center gap-2 w-full">
             <Image
-              alt="Alex Ritt"
+              alt="Gary Shores"
               height={30}
               width={30}
               src={homeProfileImage}
@@ -135,7 +135,7 @@ export default function BlogLayout({
             />
             <div className="flex flex-col sm:flex-row sm:justify-between w-full">
               <p className="text-sm  flex items-center gap-2 font-medium !my-0">
-                <span>Alex Ritt</span>
+                <span>Gary Shores</span>
                 <span>•</span>
                 <span>{getFormattedDate(new Date(post.meta.date))}</span>
               </p>

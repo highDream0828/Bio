@@ -8,7 +8,6 @@ excerpt: In this article, I will explain how you can create an RSS feed for your
 
 In this article, I will explain how you can create an RSS feed for your Next.js application in XML and JSON format. So without further delay, let's get into it.
 
-
 ## What is RSS?
 
 An RSS (Really Simple Syndication) feed is a file that contains a summary of updates from a website, often in the form of a list of articles with links.
@@ -21,8 +20,8 @@ In my case, I am creating an RSS feed for my blogs to show the latest blogs as t
 - install the `feed` package
 - Create RSS Feed
 
-
 ## Method-1
+
 ### Getting the Blogs' data
 
 I am assuming you already have your blog page where all the blogs are listed. I am using [MDX](https://mdxjs.com/) for managing the blog content. You might be using the same or anything else that doesn't matter. The main thing is you need to have an array containing all the blogs.
@@ -65,9 +64,7 @@ npm i feed
 
 To generate the RSS feed we create a function called `generateRssFeed`. You can change the name if you want.
 
-<Step id={1}>
-  First, we import all the important packages or functions.
-</Step>
+<Step id={1}>First, we import all the important packages or functions.</Step>
 
 <CodeTitle lang="js" title="lib/generateRssFeed.js" />
 
@@ -77,10 +74,7 @@ import { Feed } from "feed";
 import { getAllPosts } from "./posts";
 ```
 
-<Step id={2}>
-  Create a function called `generateRssFeed` and we are exporting it, which I'll
-  talk about later in this article.
-</Step>
+<Step id={2}>Create a function called `generateRssFeed` and we are exporting it, which I'll talk about later in this article.</Step>
 
 <CodeTitle lang="bash" title="lib/generateRssFeed.js" />
 
@@ -92,10 +86,7 @@ import { getAllPosts } from "./posts";
 export default async function generateRssFeed() {}
 ```
 
-<Step id={3}>
-  Now we add the following information in the above function such as all the
-  blogs, today's date, and the author and the siteURL.
-</Step>
+<Step id={3}>Now we add the following information in the above function such as all the blogs, today's date, and the author and the siteURL.</Step>
 
 <CodeTitle lang="js" title="lib/generateRssFeed.js" />
 
@@ -124,19 +115,13 @@ In the above code, I've used the `process.env.VERCEL_URL` as the siteURL. You mi
 VERCEL_URL=http://localhost:3000
 ```
 
-<Tip>
-  You don't need to define that in your production if you are also using the
-  Vercel as a hosting platform. Otherwise, you can simply add your site root
-  URL.
-</Tip>
+<Tip>You don't need to define that in your production if you are also using the Vercel as a hosting platform. Otherwise, you can simply add your site root URL.</Tip>
 
 <Step id={4}>After that we will create a feed.</Step>
 
 <CodeTitle lang="js" title="lib/generateRssFeed.js" />
-```js {15-30}
-import fs from "fs";
-import { Feed } from "feed";
-import { getAllPosts } from "./posts";
+```js {15 - 30}
+import fs from "fs"; import {Feed} from "feed"; import {getAllPosts} from "./posts";
 
 export default async function generateRssFeed() {
   const posts = getAllPosts();
@@ -148,24 +133,25 @@ export default async function generateRssFeed() {
     link: "https://twitter.com/<username>",
   };
 
-  const feed = new Feed({
-    title: "Your Blog name",
-    description: "Your Blog description",
-    id: siteURL,
-    link: siteURL,
-    image: `${siteURL}/favicon.ico`,
-    favicon: `${siteURL}/favicon.ico`,
-    copyright: `All rights reserved ${date.getFullYear()}, Alex Ritt`,
-    updated: date, // today's date
-    generator: "Feed for Node.js",
-    feedLinks: {
-      rss2: `${siteURL}/rss/feed.xml`,  // xml format
-      json: `${siteURL}/rss/feed.json`,// json fromat
-    },
-    author,
-  });
+const feed = new Feed({
+title: "Your Blog name",
+description: "Your Blog description",
+id: siteURL,
+link: siteURL,
+image: `${siteURL}/favicon.ico`,
+favicon: `${siteURL}/favicon.ico`,
+copyright: `All rights reserved ${date.getFullYear()}, Gary Shores`,
+updated: date, // today's date
+generator: "Feed for Node.js",
+feedLinks: {
+rss2: `${siteURL}/rss/feed.xml`, // xml format
+json: `${siteURL}/rss/feed.json`,// json fromat
+},
+author,
+});
 }
-```
+
+````
 
 The above code creates an RSS feed in `XML` and `JSON` format.
 
@@ -189,7 +175,7 @@ export default async function generateRssFeed() {
     email: "example@gmail.com",
     link: "https://twitter.com/<username>",
   };
-  
+
   const feed = new Feed({
     title: "Your Blog name",
     description: "Your Blog description",
@@ -197,7 +183,7 @@ export default async function generateRssFeed() {
     link: siteURL,
     image: `${siteURL}/favicon.ico`,
     favicon: `${siteURL}/favicon.ico`,
-    copyright: `All rights reserved ${date.getFullYear()}, Alex Ritt`,
+    copyright: `All rights reserved ${date.getFullYear()}, Gary Shores`,
     updated: date, // today's date
     generator: "Feed for Node.js",
     feedLinks: {
@@ -221,7 +207,7 @@ export default async function generateRssFeed() {
     });
   });
 }
-```
+````
 
 This code is straight forward and we just add the important data to the feed.
 
@@ -245,7 +231,7 @@ export default async function generateRssFeed() {
     email: "example@gmail.com",
     link: "https://twitter.com/<username>",
   };
-  
+
   const feed = new Feed({
     title: "Your Blog name",
     description: "Your Blog description",
@@ -253,16 +239,16 @@ export default async function generateRssFeed() {
     link: siteURL,
     image: `${siteURL}/favicon.ico`,
     favicon: `${siteURL}/favicon.ico`,
-    copyright: `All rights reserved ${date.getFullYear()}, Alex Ritt`,
+    copyright: `All rights reserved ${date.getFullYear()}, Gary Shores`,
     updated: date, // today's date
     generator: "Feed for Node.js",
     feedLinks: {
-      rss2: `${siteURL}/rss/feed.xml`,  // xml format
-      json: `${siteURL}/rss/feed.json`,// json fromat
+      rss2: `${siteURL}/rss/feed.xml`, // xml format
+      json: `${siteURL}/rss/feed.json`, // json fromat
     },
     author,
   });
-  
+
   posts.forEach((post) => {
     const url = `${siteURL}/blog/${post.slug}`;
     feed.addItem({
@@ -298,18 +284,14 @@ export async function getStaticProps() {
 }
 ```
 
-<Tip>
-  I didn't want to push the RSS files to GitHub, because it is not necessary.
-  That's why I put `/public/rss` in the `.gitignore`.
-</Tip>
+<Tip>I didn't want to push the RSS files to GitHub, because it is not necessary. That's why I put `/public/rss` in the `.gitignore`.</Tip>
 
 That's it everything is done. Now if you are in the development then you can go to the [localhost:3000/rss/feed.xml](http://localhost:3000/rss/feed.xml) and if you are in the production then you can just simply go to `https://yoursite.com/rss/feed.xml`. You will find the RSS in `xml` format. In case you want to get the `json` data just use `https://yoursite.com/rss/feed.json`.
-
-
 
 ## Method-2
 
 ### Install `rss` package
+
 In the second method you need to install the `rss` package through `npm` or `yarn`
 
 <CodeTitle lang="bash" title="bash" />
@@ -376,8 +358,8 @@ export async function getStaticProps() {
 
 After applying this method you just need to visit the `/feed.xml` and it'll give you the result. For example - `https://youdomain.com/feex.xml`
 
-
 My [RSS feed](/feed.xml) is live right now you can check it out.
 
 ## Wrappig up
-This is how you can add RSS feed to your own blog or side via using Next.js and some npm pacakges. This will help users in fetching the RSS stream to their RSS reader.  
+
+This is how you can add RSS feed to your own blog or side via using Next.js and some npm pacakges. This will help users in fetching the RSS stream to their RSS reader.

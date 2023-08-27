@@ -30,7 +30,7 @@ export default function Form() {
     };
 
     const emailData = {
-      to_name: "Alex Ritt",
+      to_name: "Gary Shores",
       first_name: target.first_name.value.trim(),
       last_name: target.last_name.value.trim(),
       email: target.email.value.trim(),

@@ -66,31 +66,21 @@ Take a look at the current version of my portfolio by vising [Bio](https://Bio)
 Start by creating a new Next.js project if you don’t have one set up already. The most common approach is to use Create Next App.
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-npx create-next-app my-project
-cd my-project
-```
+```bash npx create-next-app my-project cd my-project ```
 
 ### Install Tailwind CSS
 
 Install `tailwindcss` and its peer dependencies via npm, and then run the init command to generate both `tailwind.config.js` and `postcss.config.js`.
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-```
+```bash npm install -D tailwindcss postcss autoprefixer npx tailwindcss init -p ```
 
 ### Add the Tailwind directives to your CSS
 
 Add the `@tailwind` directives for each of Tailwind's layers to your `./styles/globals.css` file.
 
 <CodeTitle title="styles/globals.css" lang="css" />
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
+```css @tailwind base; @tailwind components; @tailwind utilities; ```
 
 ### Configure your template paths
 
@@ -158,9 +148,7 @@ I am going to use [pnpm](https://pnpm.io/) as the package manager instead of npm
 Now we need to install the tailwindcss plugins that we just added to `tailwind.config.js`
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-pnpm install @tailwindcss/line-clamp @tailwindcss/typography tailwind-scrollbar-hide
-```
+```bash pnpm install @tailwindcss/line-clamp @tailwindcss/typography tailwind-scrollbar-hide ```
 
 `@tailwindcss/typography` will be used in styling the blog.
 
@@ -169,18 +157,14 @@ pnpm install @tailwindcss/line-clamp @tailwindcss/typography tailwind-scrollbar-
 Run your build process with `pnpm run dev`. And your project will be available at [http://localhost:3000](http://localhost:3000)
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-npm run dev
-```
+```bash npm run dev ```
 
 ### Setup `next.config.js`
 
 **Installing `@next/bundle-analyzer`**
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-pnpm i @next/bundle-analyzer next-pwa
-```
+```bash pnpm i @next/bundle-analyzer next-pwa ```
 
 - [next-pwa](https://www.npmjs.com/package/next-pwa): To generate PWA which we will cover later
 - [@next/bundle-analyzer](https://www.npmjs.com/package/@next/bundle-analyzer): Analyze your bundle (optional)
@@ -194,26 +178,26 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const withPWA = require("next-pwa");
 
 module.exports = withBundleAnalyzer(
-  withPWA({
-    webpack: true,
-    webpack: (config) => {
-      // Fixes npm packages that depend on `fs` module
-      config.resolve.fallback = { fs: false };
-      return config;
-    },
-    reactStrictMode: true,
-    images: {
-      domains: [
-        "cdn.buymeacoffee.com",
-        "res.cloudinary.com",
-        "imgur.com",
-        "i.imgur.com",
-        "cutt.ly",
-        "activity-graph.herokuapp.com",
-        "i.scdn.co", // images from spotify
-        "images.unsplash.com",
-      ],
-    },
+withPWA({
+webpack: true,
+webpack: (config) => {
+// Fixes npm packages that depend on `fs` module
+config.resolve.fallback = { fs: false };
+return config;
+},
+reactStrictMode: true,
+images: {
+domains: [
+"cdn.buymeacoffee.com",
+"res.cloudinary.com",
+"imgur.com",
+"i.imgur.com",
+"cutt.ly",
+"activity-graph.herokuapp.com",
+"i.scdn.co", // images from spotify
+"images.unsplash.com",
+],
+},
 
     // Pwa Setting
     pwa: {
@@ -223,9 +207,11 @@ module.exports = withBundleAnalyzer(
       disable: process.env.NODE_ENV === "development",
       publicExcludes: ["!resume.pdf"], // don't cache pdf which I'll add later
     },
-  })
+
+})
 );
-```
+
+````
 
 ### Setup `jsconfig.json`
 
@@ -250,7 +236,7 @@ Setting up `jsconfig.json` to make import easier. You don't need to use `../../.
     }
   }
 }
-```
+````
 
 ### Disabling some ESLint rules
 
@@ -270,37 +256,35 @@ Setting up `jsconfig.json` to make import easier. You don't need to use `../../.
 This is just to create a Dark mode Support using Context API:
 
 <CodeTitle title="context/darkModeContext.js" lang="jsx" />
-```js
-import React, { useState, useContext, useEffect, createContext } from "react";
-const DarkModeContext = createContext(undefined);
+```js import React, {(useState, useContext, useEffect, createContext)} from "react"; const DarkModeContext = createContext(undefined);
 
 export function DarkModeProvider({ children }) {
   const [isDarkMode, setDarkMode] = useState(false);
 
-  function updateTheme() {
-    const currentTheme = localStorage.getItem("isDarkMode") || "false";
-    if (currentTheme === "true") {
-      document.body.classList.add("dark");
-      setDarkMode(true);
-    } else {
-      document.body.classList.remove("dark");
-      setDarkMode(false);
-    }
-  }
-  useEffect(() => {
-    updateTheme();
-  }, []);
-  function changeDarkMode(value) {
-    localStorage.setItem("isDarkMode", value.toString());
-    // setDarkMode(value);
-    updateTheme();
-  }
+function updateTheme() {
+const currentTheme = localStorage.getItem("isDarkMode") || "false";
+if (currentTheme === "true") {
+document.body.classList.add("dark");
+setDarkMode(true);
+} else {
+document.body.classList.remove("dark");
+setDarkMode(false);
+}
+}
+useEffect(() => {
+updateTheme();
+}, []);
+function changeDarkMode(value) {
+localStorage.setItem("isDarkMode", value.toString());
+// setDarkMode(value);
+updateTheme();
+}
 
-  return (
-    <DarkModeContext.Provider value={{ isDarkMode, changeDarkMode }}>
-      {children}
-    </DarkModeContext.Provider>
-  );
+return (
+<DarkModeContext.Provider value={{ isDarkMode, changeDarkMode }}>
+{children}
+</DarkModeContext.Provider>
+);
 }
 
 export const useDarkMode = () => {
@@ -315,19 +299,18 @@ export const useDarkMode = () => {
 Now Wrap the `_app.js` with `DarkModeProvider`:
 
 <CodeTitle title="_app.js" lang="jsx" />
-```js
-import "@styles/globals.css";
-import { DarkModeProvider } from "@context/darkModeContext";
+```js import "@styles/globals.css"; import {DarkModeProvider} from "@context/darkModeContext";
 
 function MyApp({ Component, pageProps }) {
-  return (
-   {/* Adding Darkmode Provider */}
-    <DarkModeProvider>
-        <Component {...pageProps} />
-    </DarkModeProvider>
-  );
+return (
+{/* Adding Darkmode Provider */}
+<DarkModeProvider>
+<Component {...pageProps} />
+</DarkModeProvider>
+);
 }
-```
+
+````
 
 ## Creating Layout
 
@@ -351,7 +334,7 @@ export default function Layout({ children }) {
     </>
   );
 }
-```
+````
 
 Don't worry we will create all of them one by one:
 
@@ -366,32 +349,17 @@ Before we build Navbar we need to install some dependencies first:
 - [framer-motion](https://www.npmjs.com/package/framer-motion) : To Add animation in project
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-pnpm install react-icons framer-motion
-```
+```bash pnpm install react-icons framer-motion ```
 
 Let's set up routes first. I am using a static Array where I can add a new route and it will automatically be visible to the navbar:
 
 <CodeTitle title="utils/utils.js" lang="js" />
-```js
-export const navigationRoutes = [
-  "home",
-  "about",
-  "stats",
-  "utilities",
-  "blogs",
-  "certificates",
-  "projects",
-  "newsletter",
-  "rss",
-];
-```
+```js export const navigationRoutes = [ "home", "about", "stats", "utilities", "blogs", "certificates", "projects", "newsletter", "rss", ]; ```
 
 These are the routes we are going to create. Let's look at the `TopNavbar` component now:
 
 <CodeTitle title="components/TopNavbar.js" lang="jsx" />
-```js
-/* Importing modules */
+```js /* Importing modules */
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
@@ -474,29 +442,30 @@ import { useDarkMode } from "../context/darkModeContext";
 import { navigationRoutes } from "../utils/utils";
 import { FiMoon, FiSun } from "react-icons/fi";
 
-/* TopNavbar Component */
+/_ TopNavbar Component _/
 export default function TopNavbar() {
-  const router = useRouter();
-  const navRef = useRef(null);
+const router = useRouter();
+const navRef = useRef(null);
 
-  /*  Using to control animation as I'll show the name to the mobile navbar when you scroll a bit
-   * demo: https://i.imgur.com/5LKI5DY.gif
-   */
+/\* Using to control animation as I'll show the name to the mobile navbar when you scroll a bit
+
+- demo: https://i.imgur.com/5LKI5DY.gif
+  \*/
   const control = useAnimation();
   const [navOpen, setNavOpen] = useState(false);
   const { isDarkMode, changeDarkMode } = useDarkMode();
 
-  // Adding Shadow, backdrop to the navbar as user scroll the screen
-  const addShadowToNavbar = useCallback(() => {
-    if (window.pageYOffset > 10) {
-      navRef.current.classList.add(
-        ...[
-          "shadow",
-          "backdrop-blur-xl",
-          "bg-white/70",
-          "dark:bg-darkSecondary",
-        ]
-      );
+// Adding Shadow, backdrop to the navbar as user scroll the screen
+const addShadowToNavbar = useCallback(() => {
+if (window.pageYOffset > 10) {
+navRef.current.classList.add(
+...[
+"shadow",
+"backdrop-blur-xl",
+"bg-white/70",
+"dark:bg-darkSecondary",
+]
+);
 
       control.start("visible");
     } else {
@@ -510,39 +479,40 @@ export default function TopNavbar() {
       );
       control.start("hidden");
     }
-  }, [control]);
 
-  useEffect(() => {
-    window.addEventListener("scroll", addShadowToNavbar);
-    return () => {
-      window.removeEventListener("scroll", addShadowToNavbar);
-    };
-  }, [addShadowToNavbar]);
+}, [control]);
 
-  // to lock the scroll when mobile is open
-  function lockScroll() {
-    const root = document.getElementsByTagName("html")[0];
-    root.classList.toggle("lock-scroll"); // class is define in the global.css
-  }
+useEffect(() => {
+window.addEventListener("scroll", addShadowToNavbar);
+return () => {
+window.removeEventListener("scroll", addShadowToNavbar);
+};
+}, [addShadowToNavbar]);
 
-  /* To Lock  the Scroll when user visit the mobile nav page */
-  function handleClick() {
-    lockScroll();
-    setNavOpen(!navOpen);
-  }
+// to lock the scroll when mobile is open
+function lockScroll() {
+const root = document.getElementsByTagName("html")[0];
+root.classList.toggle("lock-scroll"); // class is define in the global.css
+}
 
-  return (
-    <div
+/_ To Lock the Scroll when user visit the mobile nav page _/
+function handleClick() {
+lockScroll();
+setNavOpen(!navOpen);
+}
+
+return (
+<div
       className="fixed w-full dark:text-white top-0 flex items-center justify-between px-4 py-[10px] sm:p-4 sm:px-6 z-50 print:hidden"
       ref={navRef}
     >
-      {/* Mobile Navigation Hamburger and MobileMenu */}
-      <HamBurger open={navOpen} handleClick={handleClick} />
-      <AnimatePresence>
-        {navOpen && (
-          <MobileMenu links={navigationRoutes} handleClick={handleClick} />
-        )}
-      </AnimatePresence>
+{/* Mobile Navigation Hamburger and MobileMenu */}
+<HamBurger open={navOpen} handleClick={handleClick} />
+<AnimatePresence>
+{navOpen && (
+<MobileMenu links={navigationRoutes} handleClick={handleClick} />
+)}
+</AnimatePresence>
 
       <Link href="/" passHref>
         <div className="flex gap-2 items-center cursor-pointer z-50">
@@ -563,7 +533,7 @@ export default function TopNavbar() {
             }}
             className="absolute sm:!hidden w-fit left-0 right-0 mx-auto flex justify-center  text-base font-sarina"
           >
-            Alex Ritt
+            Gary Shores
           </motion.p>
         </div>
       </Link>
@@ -605,40 +575,39 @@ export default function TopNavbar() {
         )}
       </motion.div>
     </div>
-  );
+
+);
 }
 
 // NavItem Container
 function NavItem({ href, text, router }) {
-  const isActive = router.asPath === (href === "/home" ? "/" : href);
-  return (
-    <Link href={href === "/home" ? "/" : href} passHref>
-      <motion.a
-        variants={popUp}
-        className={`${
+const isActive = router.asPath === (href === "/home" ? "/" : href);
+return (
+<Link href={href === "/home" ? "/" : href} passHref>
+<motion.a
+variants={popUp}
+className={`${
           isActive
             ? "font-bold text-gray-800 dark:text-gray-100"
             : " text-gray-600 dark:text-gray-300"
-        } sm:inline-block transition-all text-[17px] hidden px-2 md:px-3 py-[3px] hover:bg-gray-100 dark:hover:bg-neutral-700/50 rounded-md`}
-      >
-        <span className="capitalize">{text}</span>
-      </motion.a>
-    </Link>
-  );
+        } sm:inline-block transition-all text-[17px] hidden px-2 md:px-3 py-[3px] hover:bg-gray-100 dark:hover:bg-neutral-700/50 rounded-md`} >
+<span className="capitalize">{text}</span>
+</motion.a>
+</Link>
+);
 }
 
 // Hamburger Button
 function HamBurger({ open, handleClick }) {
-  return (
-    <motion.div
-      style={{ zIndex: 1000 }}
-      initial="hidden"
-      animate="visible"
-      variants={popUp}
-      className="sm:hidden"
-    >
-      {!open ? (
-        <svg
+return (
+<motion.div
+style={{ zIndex: 1000 }}
+initial="hidden"
+animate="visible"
+variants={popUp}
+className="sm:hidden" >
+{!open ? (
+<svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6 cursor-pointer select-none transform duration-300 rounded-md active:scale-50"
           onClick={handleClick}
@@ -647,14 +616,14 @@ function HamBurger({ open, handleClick }) {
           stroke="currentColor"
           strokeWidth={2}
         >
-          <path
+<path
             strokeLinecap="round"
             strokeLinejoin="round"
             d="M4 6h16M4 12h16M4 18h16"
           />
-        </svg>
-      ) : (
-        <svg
+</svg>
+) : (
+<svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6 cursor-pointer select-none transform duration-300  rounded-md active:scale-50"
           onClick={handleClick}
@@ -663,49 +632,48 @@ function HamBurger({ open, handleClick }) {
           stroke="currentColor"
           strokeWidth={2}
         >
-          <path
+<path
             strokeLinecap="round"
             strokeLinejoin="round"
             d="M6 18L18 6M6 6l12 12"
           />
-        </svg>
-      )}
-    </motion.div>
-  );
+</svg>
+)}
+</motion.div>
+);
 }
 
 // Mobile navigation menu
 const MobileMenu = ({ links, handleClick }) => {
-  return (
-    <motion.div
-      className="absolute font-normal bg-white dark:bg-darkPrimary w-screen h-screen top-0 left-0 z-10 sm:hidden"
-      variants={hamFastFadeContainer}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-    >
-      <motion.nav className="mt-28 mx-8 flex flex-col">
-        {links.map((link, index) => {
-          const navlink =
-            link.toLowerCase() === "home" ? "/" : `/${link.toLowerCase()}`;
-          return (
-            <Link href={navlink} key={`mobileNav-${index}`} passHref>
-              <motion.a
-                href={navlink}
-                className="border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-semibold flex w-auto py-4 capitalize text-base cursor-pointer"
-                variants={mobileNavItemSideways}
-                onClick={handleClick}
-              >
-                {link === "rss" ? link.toUpperCase() : link}
-              </motion.a>
-            </Link>
-          );
-        })}
-      </motion.nav>
-    </motion.div>
-  );
+return (
+<motion.div
+className="absolute font-normal bg-white dark:bg-darkPrimary w-screen h-screen top-0 left-0 z-10 sm:hidden"
+variants={hamFastFadeContainer}
+initial="hidden"
+animate="visible"
+exit="hidden" >
+<motion.nav className="mt-28 mx-8 flex flex-col">
+{links.map((link, index) => {
+const navlink =
+link.toLowerCase() === "home" ? "/" : `/${link.toLowerCase()}`;
+return (
+<Link href={navlink} key={`mobileNav-${index}`} passHref>
+<motion.a
+href={navlink}
+className="border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 font-semibold flex w-auto py-4 capitalize text-base cursor-pointer"
+variants={mobileNavItemSideways}
+onClick={handleClick} >
+{link === "rss" ? link.toUpperCase() : link}
+</motion.a>
+</Link>
+);
+})}
+</motion.nav>
+</motion.div>
+);
 };
-```
+
+````
 
 - This is the whole file for the `TopNavbar` I used. Where I added a `scroll` event to the window just to add shadow to Navbar and show my name if you are on a mobile device.
 - I also locked the scroll by calling the `lockScroll` function when Mobile Navbar is active/open. So that user won't be able to scroll.
@@ -772,7 +740,7 @@ export default function ScrollToTopButton() {
     </>
   );
 }
-```
+````
 
 `ScrollToTopButton` won't show when you are at the top or at the bottom of the page. It will only show when your viewport is somewhere between `10%-95%`. After doing this it will look something like this:
 
@@ -780,11 +748,7 @@ export default function ScrollToTopButton() {
 
 I have also made an article with an explanation you can read that too:
 
-<EmbedBlog 
-  img="https://imgur.com/si8NtCR.png" 
-  text="Scroll to the top with JS" 
-  url="/blogs/scroll-to-the-top-with-js" 
-/>
+<EmbedBlog img="https://imgur.com/si8NtCR.png" text="Scroll to the top with JS" url="/blogs/scroll-to-the-top-with-js" />
 
 ### Creating Footer
 
@@ -801,20 +765,13 @@ There is a QR Code Button at the bottom of the Footer which I'll cover in the ne
 **creating `components/Footer.js`:**
 
 <CodeTitle title="components/Footer.js" lang="jsx" />
-```js
-import Link from "next/link";
-import Image from "next/image";
-import { FadeContainer, popUp } from "../content/FramerMotionVariants";
-import { navigationRoutes } from "../utils/utils";
-import { motion } from "framer-motion";
-import { SiSpotify } from "react-icons/si";
-import { HiOutlineQrcode } from "react-icons/hi";
-import useSWR from "swr"; // not installed yet
+```js import Link from "next/link"; import Image from "next/image"; import {(FadeContainer, popUp)} from "../content/FramerMotionVariants"; import {navigationRoutes} from "../utils/utils"; import {motion} from "framer-motion"; import {SiSpotify} from "react-icons/si"; import {HiOutlineQrcode} from "react-icons/hi"; import useSWR from "swr"; // not installed yet
 
 // Not create yet
 import fetcher from "../lib/fetcher";
 import socialMedia from "../content/socialMedia";
-```
+
+````
 
 #### Installing SWR
 
@@ -823,7 +780,7 @@ First, we need to install [swr](https://swr.vercel.app/). SWR is a strategy to f
 <CodeTitle title="terminal" lang="bash" />
 ```bash
 pnpm i swr
-```
+````
 
 SWR uses the `fetcher` function which is just a wrapper of the native `fetch`. You can visit their [docs](https://swr.vercel.app/docs/getting-started)
 
@@ -841,12 +798,7 @@ export default async function fetcher(url) {
 As you can see in the footer we have social media links as well which have not been created yet. Let's do it then:
 
 <CodeTitle title="content/socialMedia.js" lang="js" />
-```js
-import { AiOutlineInstagram, AiOutlineTwitter } from "react-icons/ai";
-import { BsFacebook, BsGithub, BsLinkedin } from "react-icons/bs";
-import { FaDev } from "react-icons/fa";
-import { HiMail } from "react-icons/hi";
-import { SiCodepen } from "react-icons/si";
+```js import {(AiOutlineInstagram, AiOutlineTwitter)} from "react-icons/ai"; import {(BsFacebook, BsGithub, BsLinkedin)} from "react-icons/bs"; import {FaDev} from "react-icons/fa"; import {HiMail} from "react-icons/hi"; import {SiCodepen} from "react-icons/si";
 
 export default [
   {
@@ -897,8 +849,7 @@ I am importing react icons as well , maybe you want to add Icons along with the 
 Now we have done almost everything, let's continue with `Footer.js`:
 
 <CodeTitle title="components/Footer.js" lang="jsx" />
-```js
-/*......previous code......*/
+```js /*......previous code......*/
 
 export default function Footer({ setShowQR, showQR }) {}
 ```
@@ -906,8 +857,7 @@ export default function Footer({ setShowQR, showQR }) {}
 Taking `setShowQR` and `showQR` as props to trigger the bottom QR Code button at the bottom.
 
 <CodeTitle title="components/Footer.js" lang="jsx" />
-```js
-/*......previous code......*/
+```js /*......previous code......*/
 
 export default function Footer({ setShowQR, showQR }) {
   const { data: currentSong } = useSWR("/api/now-playing", fetcher);
@@ -925,14 +875,15 @@ Now we will use `useSWR` to fetch the Next.js API route that will return the cur
 
 // when playing
 {
-  "album": "See You Again (feat. Charlie Puth)",
-  "albumImageUrl": "https://i.scdn.co/image/ab67616d0000b2734e5df11b17b2727da2b718d8",
-  "artist": "Wiz Khalifa, Charlie Puth",
-  "isPlaying": true,
-  "songUrl": "https://open.spotify.com/track/2JzZzZUQj3Qff7wapcbKjc",
-  "title": "See You Again (feat. Charlie Puth)"
+"album": "See You Again (feat. Charlie Puth)",
+"albumImageUrl": "https://i.scdn.co/image/ab67616d0000b2734e5df11b17b2727da2b718d8",
+"artist": "Wiz Khalifa, Charlie Puth",
+"isPlaying": true,
+"songUrl": "https://open.spotify.com/track/2JzZzZUQj3Qff7wapcbKjc",
+"title": "See You Again (feat. Charlie Puth)"
 }
-```
+
+````
 
 It will return with which song I am playing along with details. But we have not created `/api/now-playing` route. Did we? Let's create it then.
 
@@ -945,15 +896,11 @@ It will return with which song I am playing along with details. But we have not 
 <CodeTitle title="pages/api/now-playing.js" lang="js" />
 ```js
 export default async function handler(req, res) {}
-```
+````
 
 Now the most complex part is Spotify integration. But don't worry about that I have a blog on that in detail about how you can implement that so you can read that here (this is a must):
 
-<EmbedBlog 
-  img="https://imgur.com/SAhercO.png" 
-  text="How to use Spotify API with Next.js" 
-  url="/blogs/spotify-api-nextjs" 
-/>
+<EmbedBlog img="https://imgur.com/SAhercO.png" text="How to use Spotify API with Next.js" url="/blogs/spotify-api-nextjs" />
 
 After implementing Spotify API integration you will have three things:
 
@@ -973,34 +920,35 @@ Now we will create a function that will fetch the data on the server.
 const getAccessToken = async () => {
   const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN;
 
-  const response = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${Buffer.from(
+const response = await fetch("https://accounts.spotify.com/api/token", {
+method: "POST",
+headers: {
+Authorization: `Basic ${Buffer.from(
         `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
       ).toString("base64")}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token,
-    }),
-  });
+"Content-Type": "application/x-www-form-urlencoded",
+},
+body: new URLSearchParams({
+grant_type: "refresh_token",
+refresh_token,
+}),
+});
 
-  return response.json();
+return response.json();
 };
 
-/* Uses "access_token" to get the current playing song */
+/_ Uses "access_token" to get the current playing song _/
 export const currentlyPlayingSong = async () => {
-  const { access_token } = await getAccessToken();
+const { access_token } = await getAccessToken();
 
-  return fetch("https://api.spotify.com/v1/me/player/currently-playing", {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
+return fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+headers: {
+Authorization: `Bearer ${access_token}`,
+},
+});
 };
-```
+
+````
 
 In the above code we just added two functions:
 
@@ -1042,13 +990,12 @@ export default async function handler(req, res) {
     title,
   });
 }
-```
+````
 
 It was simple Right? Now, we have added the API route (`/api/now-playing`). Let's call it in `Footer` and fetch the currently playing song.
 
 <CodeTitle title="components/Footer.js" lang="jsx" />
-```js
-/*......previous code......*/
+```js /*......previous code......*/
 
 export default function Footer({ setShowQR, showQR }) {
   // we just implemented this line in API Routes now it will work as expected
@@ -1068,49 +1015,27 @@ export default function Footer({ setShowQR, showQR }) {
 
   return (
     <footer className=" text-gray-600 dark:text-gray-400/50 w-screen font-inter mb-20 print:hidden">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        variants={FadeContainer}
-        viewport={{ once: true }}
-        className="max-w-4xl 2xl:max-w-5xl 3xl:max-w-7xl p-5 border-t-2 border-gray-200  dark:border-gray-400/10 mx-auto text-sm sm:text-base flex flex-col gap-5"
-      >
-        <div>
-          {currentSong?.isPlaying ? (
-            <WhenPlaying song={currentSong} />
-          ) : (
-            <NotPlaying />
-          )}
-        </div>
+      <motion.div initial="hidden" whileInView="visible" variants={FadeContainer} viewport={{ once: true }} className="max-w-4xl 2xl:max-w-5xl 3xl:max-w-7xl p-5 border-t-2 border-gray-200  dark:border-gray-400/10 mx-auto text-sm sm:text-base flex flex-col gap-5">
+        <div>{currentSong?.isPlaying ? <WhenPlaying song={currentSong} /> : <NotPlaying />}</div>
 
         <section className="grid grid-cols-3 gap-10">
           <div className="flex flex-col gap-4 capitalize">
             {navigationRoutes.slice(0, 4).map((text, index) => {
-              return (
-                <FooterLink key={index} id={index} route={text} text={text} />
-              );
+              return <FooterLink key={index} id={index} route={text} text={text} />;
             })}
           </div>
           <div className="flex flex-col gap-4 capitalize">
-            {navigationRoutes
-              .slice(4, navigationRoutes.length)
-              .map((route, index) => {
-                let text = route;
-                if (route === "rss") text = "RSS";
-                return <FooterLink key={index} route={route} text={text} />;
-              })}
+            {navigationRoutes.slice(4, navigationRoutes.length).map((route, index) => {
+              let text = route;
+              if (route === "rss") text = "RSS";
+              return <FooterLink key={index} route={route} text={text} />;
+            })}
           </div>
           <div className="flex flex-col gap-4 capitalize">
             {socialMedia.slice(0, 4).map((platform, index) => {
               return (
                 <Link key={index} href={platform.url} passHref>
-                  <motion.a
-                    className="hover:text-black dark:hover:text-white w-fit"
-                    variants={popUp}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={platform.url}
-                  >
+                  <motion.a className="hover:text-black dark:hover:text-white w-fit" variants={popUp} target="_blank" rel="noopener noreferrer" href={platform.url}>
                     {platform.title}
                   </motion.a>
                 </Link>
@@ -1121,10 +1046,7 @@ export default function Footer({ setShowQR, showQR }) {
       </motion.div>
 
       <div className="w-full flex justify-center">
-        <div
-          onClick={() => setShowQR(!showQR)}
-          className="bg-gray-700 text-white p-4 rounded-full cursor-pointer transition-all active:scale-90 hover:scale-105"
-        >
+        <div onClick={() => setShowQR(!showQR)} className="bg-gray-700 text-white p-4 rounded-full cursor-pointer transition-all active:scale-90 hover:scale-105">
           <HiOutlineQrcode className="w-6 h-6 " />
         </div>
       </div>
@@ -1142,50 +1064,48 @@ In the about Code, we have not implemented three things yet:
 Let's add these components inside `components/Footer.js`. You can make separate components for them, it's up to you. I've added those inside the `Footer`components:
 
 <CodeTitle title="components/Footer.js" lang="jsx" />
-```jsx
-/*......previous code (Footer Component)......*/
+```jsx /*......previous code (Footer Component)......*/
 
 function FooterLink({ route, text }) {
-  return (
-    <Link href={`/${route}`} passHref>
-      <motion.a
-        className="hover:text-black dark:hover:text-white w-fit"
-        variants={popUp}
-        href={`/${route}`}
-      >
-        {text}
-      </motion.a>
-    </Link>
-  );
+return (
+<Link href={`/${route}`} passHref>
+<motion.a
+className="hover:text-black dark:hover:text-white w-fit"
+variants={popUp}
+href={`/${route}`} >
+{text}
+</motion.a>
+</Link>
+);
 }
 
 function NotPlaying() {
-  return (
-    <div className="flex items-center gap-2 flex-row-reverse sm:flex-row justify-between sm:justify-start">
-      <SiSpotify className="w-6 h-6" />
-      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-        <div className="font-semibold md:text-lg text-black dark:text-white">
-          Not Playing
-        </div>
-        <span className="hidden md:inline-flex">—</span>
-        <p className="text-gray-500 text-xs sm:text-sm">Spotify</p>
-      </div>
-    </div>
-  );
+return (
+<div className="flex items-center gap-2 flex-row-reverse sm:flex-row justify-between sm:justify-start">
+<SiSpotify className="w-6 h-6" />
+<div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+<div className="font-semibold md:text-lg text-black dark:text-white">
+Not Playing
+</div>
+<span className="hidden md:inline-flex">—</span>
+<p className="text-gray-500 text-xs sm:text-sm">Spotify</p>
+</div>
+</div>
+);
 }
 
 function WhenPlaying({ song }) {
-  return (
-    <div className="flex flex-col gap-4">
-      <h4 className="text-lg font-semibold">Now Playing</h4>
-      <Link href={song.songUrl} passHref>
-        <a
+return (
+<div className="flex flex-col gap-4">
+<h4 className="text-lg font-semibold">Now Playing</h4>
+<Link href={song.songUrl} passHref>
+<a
           href={song.songUrl}
           className="flex items-center justify-between bg-gray-200 dark:bg-darkSecondary  p-3 sm:p-4 rounded-sm"
         >
-          <div className=" flex items-center gap-2">
-            <div className="w-10 h-10">
-              <Image
+<div className=" flex items-center gap-2">
+<div className="w-10 h-10">
+<Image
                 alt={song.title}
                 src={song.albumImageUrl}
                 width={40}
@@ -1195,24 +1115,25 @@ function WhenPlaying({ song }) {
                 placeholder="blur"
                 blurDataURL={song.albumImageUrl}
               />
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-              <h3 className="font-semibold md:text-lg text-black dark:text-white animate-">
-                {song.title}
-              </h3>
-              <span className="hidden md:inline-flex">—</span>
-              <p className="text-gray-600 text-xs sm:text-sm">{song.artist}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <SiSpotify className="w-6 h-6 text-green-500 animate-[spin_2s_linear_infinite]" />
-          </div>
-        </a>
-      </Link>
-    </div>
-  );
+</div>
+<div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+<h3 className="font-semibold md:text-lg text-black dark:text-white animate-">
+{song.title}
+</h3>
+<span className="hidden md:inline-flex">—</span>
+<p className="text-gray-600 text-xs sm:text-sm">{song.artist}</p>
+</div>
+</div>
+<div className="flex items-center gap-2">
+<SiSpotify className="w-6 h-6 text-green-500 animate-[spin_2s_linear_infinite]" />
+</div>
+</a>
+</Link>
+</div>
+);
 }
-```
+
+````
 
 If you are confused that how will it turn out , then the following is the full code of the footer:
 
@@ -1368,7 +1289,7 @@ function WhenPlaying({ song }) {
     </div>
   );
 }
-```
+````
 
 ### Adding QRCodeContainer
 
@@ -1379,9 +1300,7 @@ Till now you might be wondering why there was `showQR` in `Footer.js` and the QR
 We need to install [react-qr-code](https://www.npmjs.com/package/react-qr-code) and [react-ripples](https://www.npmjs.com/package/react-ripples) to generate QR Code and show the Ripple effect respectively.
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-pnpm i react-qr-code react-ripples
-```
+```bash pnpm i react-qr-code react-ripples ```
 
 #### Creating useWindowLocation Hook
 
@@ -1390,21 +1309,20 @@ We need to create a hook that will return the current window location.
 **Create `hooks/useWindowLocation.js`**
 
 <CodeTitle title="hooks/useWindowLocation.js" lang="js" />
-```jsx
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+```jsx import {(useEffect, useState)} from "react"; import {useRouter} from "next/router";
 
 export default function useWindowLocation() {
   const [currentURL, setCurrentURL] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    setCurrentURL(window.location.href);
-  }, [router.asPath]);
+useEffect(() => {
+setCurrentURL(window.location.href);
+}, [router.asPath]);
 
-  return { currentURL };
+return { currentURL };
 }
-```
+
+````
 
 After creating `useWindowLocation` hook. Let's create `QRCodeContainer`:
 
@@ -1503,7 +1421,7 @@ export default function QRCodeContainer({ showQR, setShowQR }) {
     </>
   );
 }
-```
+````
 
 After implementing all the things I mentioned above You have created a footer and it will look something like this:
 
@@ -1512,18 +1430,16 @@ After implementing all the things I mentioned above You have created a footer an
 Our Layout is complete now. If you haven't add this layout to `_app.js` then do that now:
 
 <CodeTitle title="pages/_app.js" lang="js" />
-```jsx
-/* previous code */
-import Layout from "@layout/Layout";
+```jsx /* previous code */ import Layout from "@layout/Layout";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <DarkModeProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </DarkModeProvider>
-  );
+return (
+<DarkModeProvider>
+<Layout>
+<Component {...pageProps} />
+</Layout>
+</DarkModeProvider>
+);
 }
 
 export default MyApp;
@@ -1538,57 +1454,54 @@ NProgress is a tiny JavaScript plugin for creating a slim and nanoscopic progres
 Run the following command to install the `nprogress`
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-pnpm i nprogress
-```
+```bash pnpm i nprogress ```
 
 ### Using nprogress
 
 After installing `nprogress` we need to use that in our `pages/_app.js`:
 
 <CodeTitle title="pages/_app.js" lang="js" />
-```jsx
-/* ............Previous Code......... */
+```jsx /* ............Previous Code......... */
 
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
-/* Progressbar Configurations */
+/_ Progressbar Configurations _/
 NProgress.configure({
-  easing: "ease",
-  speed: 800,
-  showSpinner: false,
+easing: "ease",
+speed: 800,
+showSpinner: false,
 });
 
 function MyApp({ Component, pageProps }) {
-  const router = useRouter();
+const router = useRouter();
 
-  useEffect(() => {
-    const start = () => {
-      NProgress.start();
-    };
-    const end = () => {
-      NProgress.done();
-    };
-    router.events.on("routeChangeStart", start);
-    router.events.on("routeChangeComplete", end);
-    router.events.on("routeChangeError", end);
-    return () => {
-      router.events.off("routeChangeStart", start);
-      router.events.off("routeChangeComplete", end);
-      router.events.off("routeChangeError", end);
-    };
-  }, [router.events]);
+useEffect(() => {
+const start = () => {
+NProgress.start();
+};
+const end = () => {
+NProgress.done();
+};
+router.events.on("routeChangeStart", start);
+router.events.on("routeChangeComplete", end);
+router.events.on("routeChangeError", end);
+return () => {
+router.events.off("routeChangeStart", start);
+router.events.off("routeChangeComplete", end);
+router.events.off("routeChangeError", end);
+};
+}, [router.events]);
 
-  return (
-    <DarkModeProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </DarkModeProvider>
-  );
+return (
+<DarkModeProvider>
+<Layout>
+<Component {...pageProps} />
+</Layout>
+</DarkModeProvider>
+);
 }
 
 export default MyApp;
@@ -1631,22 +1544,7 @@ Good for you, you don't have to download each one of them individually. Follow t
 - Put all the fonts inside that folder like this:
 
 <CodeTitle title="Files" lang="directory" />
-```text
-my-project/
-├── components
-├── pages
-└── public/
-    └── fonts/
-        ├── Barlow/
-        │   ├── Barlow-400.woff2
-        │   ├── Barlow-500.woff2
-        │   ├── Barlow-600.woff2
-        │   ├── Barlow-700.woff2
-        │   └── Barlow-800.woff2
-        ├── Sarina/
-        │   └── Sarina-400.woff2
-        └── Inter-var.woff2
-```
+```text my-project/ ├── components ├── pages └── public/ └── fonts/ ├── Barlow/ │ ├── Barlow-400.woff2 │ ├── Barlow-500.woff2 │ ├── Barlow-600.woff2 │ ├── Barlow-700.woff2 │ └── Barlow-800.woff2 ├── Sarina/ │ └── Sarina-400.woff2 └── Inter-var.woff2 ```
 
 Now you have downloaded and saved fonts in the right place. Let's add them now.
 
@@ -1657,8 +1555,7 @@ Now you have downloaded and saved fonts in the right place. Let's add them now.
 Now we need to link or add the fonts in `pages/_document.js`. Create one if you don't have one:
 
 <CodeTitle title="pages/_document.js" lang="js" />
-```jsx
-import { Html, Head, Main, NextScript } from "next/document";
+```jsx import {(Html, Head, Main, NextScript)} from "next/document";
 
 export default function Document() {
   return (
@@ -1729,9 +1626,11 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
-  );
+
+);
 }
-```
+
+````
 
 #### Add fonts in `global.css`
 
@@ -1792,7 +1691,7 @@ We need to use `@font-face` for font optimization:
   font-display: swap;
   src: url(/fonts/Sarina/Sarina-400.woff2) format("woff2");
 }
-```
+````
 
 #### Adding fonts to `vercel.json`
 
@@ -1878,309 +1777,309 @@ That's all we need to do to add fonts in the project.
 I am using [TailwindCSS](https://tailwindcss.com/docs/) to style the projects, but we need some custom styling which will take place in `styles/global.css`. The following styles and classes will be used throughout the project. So just Copy Paste the following in your `styles/global.css` (Don't add duplicates):
 
 <CodeTitle title="styles/global.css" lang="css" />
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+```css @tailwind base; @tailwind components; @tailwind utilities;
 
 @font-face {
-  font-family: "Barlow";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/fonts/Barlow/Barlow-400.woff2) format("woff2");
+font-family: "Barlow";
+font-style: normal;
+font-weight: 400;
+font-display: swap;
+src: url(/fonts/Barlow/Barlow-400.woff2) format("woff2");
 }
 @font-face {
-  font-family: "Barlow";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(/fonts/Barlow/Barlow-500.woff2) format("woff2");
+font-family: "Barlow";
+font-style: normal;
+font-weight: 500;
+font-display: swap;
+src: url(/fonts/Barlow/Barlow-500.woff2) format("woff2");
 }
 @font-face {
-  font-family: "Barlow";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url(/fonts/Barlow/Barlow-600.woff2) format("woff2");
+font-family: "Barlow";
+font-style: normal;
+font-weight: 600;
+font-display: swap;
+src: url(/fonts/Barlow/Barlow-600.woff2) format("woff2");
 }
 @font-face {
-  font-family: "Barlow";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(/fonts/Barlow/Barlow-700.woff2) format("woff2");
+font-family: "Barlow";
+font-style: normal;
+font-weight: 700;
+font-display: swap;
+src: url(/fonts/Barlow/Barlow-700.woff2) format("woff2");
 }
 @font-face {
-  font-family: "Barlow";
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url(/fonts/Barlow/Barlow-800.woff2) format("woff2");
+font-family: "Barlow";
+font-style: normal;
+font-weight: 800;
+font-display: swap;
+src: url(/fonts/Barlow/Barlow-800.woff2) format("woff2");
 }
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url(/fonts/Inter-var.woff2) format("woff2");
+font-family: "Inter";
+font-style: normal;
+font-weight: 100 900;
+font-display: swap;
+src: url(/fonts/Inter-var.woff2) format("woff2");
 }
 @font-face {
-  font-family: "Sarina";
-  font-style: normal;
-  font-weight: normal;
-  font-display: swap;
-  src: url(/fonts/Sarina/Sarina-400.woff2) format("woff2");
+font-family: "Sarina";
+font-style: normal;
+font-weight: normal;
+font-display: swap;
+src: url(/fonts/Sarina/Sarina-400.woff2) format("woff2");
 }
 
 body,
 html {
-  overflow-x: hidden;
-  scroll-behavior: auto;
+overflow-x: hidden;
+scroll-behavior: auto;
 }
 body::-webkit-scrollbar {
-  width: 6px;
+width: 6px;
 }
 
-/* Adding Scroll Margin for top */
-* {
+/_ Adding Scroll Margin for top _/
+
+- {
   scroll-margin-top: 80px;
-}
-@media screen and (max-width: 640px) {
-  * {
+  }
+  @media screen and (max-width: 640px) {
+  - {
     scroll-margin-top: 60px;
-  }
-  body::-webkit-scrollbar {
+    }
+    body::-webkit-scrollbar {
     width: 2px;
-  }
-}
+    }
+    }
 
 pre::-webkit-scrollbar {
-  display: none;
+display: none;
 }
 
 body.dark {
-  background-color: #181a1b;
+background-color: #181a1b;
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #b3b3b3;
+background-color: #b3b3b3;
 }
 
 .dark::-webkit-scrollbar-thumb {
-  background-color: #393e41;
+background-color: #393e41;
 }
 
 .no-scrollbar::-webkit-scrollbar {
-  display: none;
+display: none;
 }
 
 .lock-scroll {
-  overflow: hidden !important;
+overflow: hidden !important;
 }
 
-/* For preventing the blue highlight color box on tap(click) */
-* {
+/_ For preventing the blue highlight color box on tap(click) _/
+
+- {
   -webkit-tap-highlight-color: transparent;
-}
+  }
 
 .truncate-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
 }
 
 .truncate-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+display: -webkit-box;
+-webkit-line-clamp: 3;
+-webkit-box-orient: vertical;
+overflow: hidden;
 }
 
 .auto-row {
-  -webkit-margin-before: auto;
-  margin-block-start: auto;
+-webkit-margin-before: auto;
+margin-block-start: auto;
 }
 
-/* Code Line Highlighting START */
+/_ Code Line Highlighting START _/
 code {
-  counter-reset: line;
+counter-reset: line;
 }
 
 code span.line {
-  padding: 2px 12px;
-  border-left: 4px solid transparent;
+padding: 2px 12px;
+border-left: 4px solid transparent;
 }
 
 code > .line::before {
-  counter-increment: line;
-  content: counter(line);
+counter-increment: line;
+content: counter(line);
 
-  /* Other styling */
-  display: inline-block;
-  width: 1rem;
-  margin-right: 1rem;
-  text-align: right;
-  color: gray;
-  font-weight: 500;
-  border-right: 4px solid transparent;
+/_ Other styling _/
+display: inline-block;
+width: 1rem;
+margin-right: 1rem;
+text-align: right;
+color: gray;
+font-weight: 500;
+border-right: 4px solid transparent;
 }
 
 .highlighted {
-  background: rgba(200, 200, 255, 0.1);
-  border-left: 4px solid #3777de !important;
-  filter: saturate(1.5);
+background: rgba(200, 200, 255, 0.1);
+border-left: 4px solid #3777de !important;
+filter: saturate(1.5);
 }
-/* Code Line Highlighting ENDS */
+/_ Code Line Highlighting ENDS _/
 
-/* Nprogress bar Custom Styling (force) : STARTS */
+/_ Nprogress bar Custom Styling (force) : STARTS _/
 #nprogress .bar {
-  background-color: rgba(0, 89, 255, 0.7) !important;
-  height: 3px !important;
+background-color: rgba(0, 89, 255, 0.7) !important;
+height: 3px !important;
 }
 .dark #nprogress .bar {
-  background: #fff !important;
+background: #fff !important;
 }
 #nprogress .peg {
-  box-shadow: none !important;
+box-shadow: none !important;
 }
-/* Nprogress bar Custom Styling (force) : ENDS */
+/_ Nprogress bar Custom Styling (force) : ENDS _/
 
 .blogGrid {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  grid-template-rows: 1fr;
+display: grid;
+grid-template-columns: 300px 1fr;
+grid-template-rows: 1fr;
 }
 
-/* Layers Components or the custom class extends with tailwind */
+/_ Layers Components or the custom class extends with tailwind _/
 @layer components {
-  .bottom_nav_icon {
-    @apply mb-[2px] text-2xl cursor-pointer;
-  }
-  .top-nav-link {
-    @apply list-none mx-1 px-3 py-1 border-black dark:border-white transition-all duration-200 hover:rounded-md hover:bg-gray-100 dark:hover:bg-darkSecondary cursor-pointer text-lg font-semibold select-none sm:text-sm md:text-base;
-  }
-  .contact_field {
-    @apply text-sm font-medium text-black dark:text-white w-full px-4 py-2 m-2 rounded-md border-none outline-none shadow-inner shadow-slate-200 dark:shadow-zinc-800 focus:ring-1 focus:ring-purple-500 dark:bg-darkPrimary dark:placeholder-gray-500;
-  }
-  .title_of_page {
-    @apply text-center text-xl font-bold  dark:bg-darkPrimary dark:text-gray-100;
-  }
-  .icon {
-    @apply text-2xl sm:text-3xl m-1 transform duration-200 lg:hover:scale-150 text-zinc-500 hover:text-zinc-800 dark:hover:text-white cursor-pointer;
-  }
+.bottom_nav_icon {
+@apply mb-[2px] text-2xl cursor-pointer;
+}
+.top-nav-link {
+@apply list-none mx-1 px-3 py-1 border-black dark:border-white transition-all duration-200 hover:rounded-md hover:bg-gray-100 dark:hover:bg-darkSecondary cursor-pointer text-lg font-semibold select-none sm:text-sm md:text-base;
+}
+.contact_field {
+@apply text-sm font-medium text-black dark:text-white w-full px-4 py-2 m-2 rounded-md border-none outline-none shadow-inner shadow-slate-200 dark:shadow-zinc-800 focus:ring-1 focus:ring-purple-500 dark:bg-darkPrimary dark:placeholder-gray-500;
+}
+.title_of_page {
+@apply text-center text-xl font-bold dark:bg-darkPrimary dark:text-gray-100;
+}
+.icon {
+@apply text-2xl sm:text-3xl m-1 transform duration-200 lg:hover:scale-150 text-zinc-500 hover:text-zinc-800 dark:hover:text-white cursor-pointer;
+}
 
-  .page_container {
-    @apply p-5 md:px-24 pb-10 dark:bg-darkPrimary dark:text-gray-200 grid gap-6 grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5;
-  }
+.page_container {
+@apply p-5 md:px-24 pb-10 dark:bg-darkPrimary dark:text-gray-200 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5;
+}
 
-  .blog_bottom_icon {
-    @apply text-3xl p-1 bg-gray-100 dark:bg-darkSecondary sm:bg-transparent ring-1 dark:ring-gray-500 ring-gray-300 sm:hover:bg-gray-100 rounded-md cursor-pointer ml-1;
-  }
-  .blog_bottom_button {
-    @apply block sm:hidden py-1 w-full lg:hover:bg-gray-300 cursor-pointer bg-gray-200 rounded-md transform duration-100 active:scale-90 select-none;
-  }
-  .user_reaction {
-    @apply flex font-semibold items-center cursor-pointer w-full justify-center sm:justify-start sm:w-auto space-x-1 text-base;
-  }
-  .project_link {
-    @apply text-center bg-gray-200 p-2 my-1 rounded-full dark:bg-darkSecondary dark:text-white cursor-pointer shadow dark:shadow-gray-500;
-  }
-  .clickable_button {
-    @apply transform duration-100 active:scale-90 lg:hover:scale-105;
-  }
+.blog_bottom_icon {
+@apply text-3xl p-1 bg-gray-100 dark:bg-darkSecondary sm:bg-transparent ring-1 dark:ring-gray-500 ring-gray-300 sm:hover:bg-gray-100 rounded-md cursor-pointer ml-1;
+}
+.blog_bottom_button {
+@apply block sm:hidden py-1 w-full lg:hover:bg-gray-300 cursor-pointer bg-gray-200 rounded-md transform duration-100 active:scale-90 select-none;
+}
+.user_reaction {
+@apply flex font-semibold items-center cursor-pointer w-full justify-center sm:justify-start sm:w-auto space-x-1 text-base;
+}
+.project_link {
+@apply text-center bg-gray-200 p-2 my-1 rounded-full dark:bg-darkSecondary dark:text-white cursor-pointer shadow dark:shadow-gray-500;
+}
+.clickable_button {
+@apply transform duration-100 active:scale-90 lg:hover:scale-105;
+}
 
-  .home-section-container {
-    @apply flex gap-2 overflow-x-scroll p-5 md:px-24 w-full min-h-[200px] select-none snap-x lg:snap-none;
-  }
-  .home-content-section {
-    @apply relative min-w-[250px] xl:min-w-[300px] break-words shadow shadow-black/20 dark:shadow-white/20 dark:bg-darkSecondary ring-gray-400 rounded-xl p-3 cursor-pointer select-none  lg:hover:scale-105 scale-95 transition bg-white snap-center lg:snap-align-none md:first:ml-24 md:last:mr-24;
-  }
-  .blog-hover-button {
-    @apply flex items-center space-x-2 border-2 border-white dark:border-zinc-600 px-3 py-1 font-semibold w-min text-white dark:text-white hover:bg-white dark:hover:bg-zinc-600 hover:text-black;
-  }
-  .hover-slide-animation {
-    @apply relative overflow-hidden before:absolute before:h-full before:w-40 before:bg-stone-900 dark:before:bg-gray-50 before:opacity-10 dark:before:opacity-5 before:-right-10 before:-z-10 before:rotate-[20deg] before:scale-y-150 before:top-4 hover:before:scale-[7] before:duration-700;
-  }
-  .pageTop {
-    @apply mt-[44px] md:mt-[60px] max-w-4xl 2xl:max-w-5xl 3xl:max-w-7xl relative mx-auto p-4 mb-10 text-neutral-900 dark:text-neutral-200;
-  }
-  .utilities-svg {
-    @apply !pointer-events-none mb-4 w-8 h-8;
-  }
-  .card {
-    @apply bg-white dark:bg-darkSecondary p-5 sm:p-10 flex flex-col sm:flex-row gap-8 items-center max-w-2xl shadow-md rounded-lg mt-[30%] sm:mt-8 transition-all;
-  }
-  .blog-container {
-    @apply !w-full dark:text-neutral-400 my-5 font-medium;
-  }
+.home-section-container {
+@apply flex gap-2 overflow-x-scroll p-5 md:px-24 w-full min-h-[200px] select-none snap-x lg:snap-none;
+}
+.home-content-section {
+@apply relative min-w-[250px] xl:min-w-[300px] break-words shadow shadow-black/20 dark:shadow-white/20 dark:bg-darkSecondary ring-gray-400 rounded-xl p-3 cursor-pointer select-none lg:hover:scale-105 scale-95 transition bg-white snap-center lg:snap-align-none md:first:ml-24 md:last:mr-24;
+}
+.blog-hover-button {
+@apply flex items-center space-x-2 border-2 border-white dark:border-zinc-600 px-3 py-1 font-semibold w-min text-white dark:text-white hover:bg-white dark:hover:bg-zinc-600 hover:text-black;
+}
+.hover-slide-animation {
+@apply relative overflow-hidden before:absolute before:h-full before:w-40 before:bg-stone-900 dark:before:bg-gray-50 before:opacity-10 dark:before:opacity-5 before:-right-10 before:-z-10 before:rotate-[20deg] before:scale-y-150 before:top-4 hover:before:scale-[7] before:duration-700;
+}
+.pageTop {
+@apply mt-[44px] md:mt-[60px] max-w-4xl 2xl:max-w-5xl 3xl:max-w-7xl relative mx-auto p-4 mb-10 text-neutral-900 dark:text-neutral-200;
+}
+.utilities-svg {
+@apply !pointer-events-none mb-4 w-8 h-8;
+}
+.card {
+@apply bg-white dark:bg-darkSecondary p-5 sm:p-10 flex flex-col sm:flex-row gap-8 items-center max-w-2xl shadow-md rounded-lg mt-[30%] sm:mt-8 transition-all;
+}
+.blog-container {
+@apply !w-full dark:text-neutral-400 my-5 font-medium;
+}
 }
 
 @layer base {
-  body {
-    @apply font-inter bg-darkWhite;
-  }
-  button {
-    @apply outline-none;
-  }
-  hr {
-    @apply !mx-auto !w-1/2 h-0.5 !bg-gray-700 dark:!bg-gray-300 border-0 !rounded-full;
-  }
+body {
+@apply font-inter bg-darkWhite;
+}
+button {
+@apply outline-none;
+}
+hr {
+@apply !mx-auto !w-1/2 h-0.5 !bg-gray-700 dark:!bg-gray-300 border-0 !rounded-full;
+}
 
-  table {
-    @apply !border-collapse text-left;
-  }
+table {
+@apply !border-collapse text-left;
+}
 
-  table thead tr > th,
-  table tbody tr > td {
-    @apply !p-2 border border-gray-400 align-middle;
-  }
+table thead tr > th,
+table tbody tr > td {
+@apply !p-2 border border-gray-400 align-middle;
+}
 
-  table thead tr > th {
-    @apply text-black dark:text-white;
-  }
+table thead tr > th {
+@apply text-black dark:text-white;
+}
 
-  table thead tr {
-    @apply align-text-top;
-  }
-  table th {
-    @apply font-bold;
-  }
-  table a {
-    @apply !text-blue-500 dark:!text-blue-400;
-  }
+table thead tr {
+@apply align-text-top;
+}
+table th {
+@apply font-bold;
+}
+table a {
+@apply !text-blue-500 dark:!text-blue-400;
+}
 
-  strong {
-    @apply !text-black dark:!text-white !font-bold;
-  }
+strong {
+@apply !text-black dark:!text-white !font-bold;
+}
 
-  /* For Blog page to remove the underline  */
-  h2 > a,
-  h3 > a,
-  h4 > a,
-  h5 > a,
-  h6 > a {
-    @apply !text-black dark:!text-white !font-bold !no-underline;
-  }
+/_ For Blog page to remove the underline _/
+h2 > a,
+h3 > a,
+h4 > a,
+h5 > a,
+h6 > a {
+@apply !text-black dark:!text-white !font-bold !no-underline;
+}
 }
 
 @layer utilities {
-  /* Hiding the arrows in the input number */
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+/_ Hiding the arrows in the input number _/
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
 }
-```
+}
+
+````
 
 ## Adding SEO Support
 
@@ -2196,7 +2095,7 @@ export default {
   home: {
     title: "",
     description:
-      "Hi, I am Alex Ritt and I am a full-stack developer with a focus on the backend. I have a strong background in the MERN stack (MongoDB, Express, React, Node.js) and have experience building scalable and maintainable web applications. At the moment, I am pursuing my Master's degree in Computer Science.",
+      "Hi, I am Gary Shores and I am a full-stack developer with a focus on the backend. I have a strong background in the MERN stack (MongoDB, Express, React, Node.js) and have experience building scalable and maintainable web applications. At the moment, I am pursuing my Master's degree in Computer Science.",
     image: "/avatar/show.png",
     keywords: "portfolio alex, portfolio scarlett1130, alex blogs",
   },
@@ -2225,7 +2124,7 @@ export default {
 
   bookmark: {
     title: "Bookmarks -",
-    description: "Bookmarked Blogs of Alex Ritt's blogs by you",
+    description: "Bookmarked Blogs of Gary Shores's blogs by you",
     image: "/avatar/show.png",
     keywords: "bookmark, blogs, ",
   },
@@ -2246,21 +2145,19 @@ export default {
   about: {
     title: "About -",
     description:
-      "Hi, I am Alex Ritt and I am a full-stack developer with a focus on the backend. I have a strong background in the MERN stack (MongoDB, Express, React, Node.js) and have experience building scalable and maintainable web applications. At the moment, I am pursuing my Master's degree in Computer Science.",
+      "Hi, I am Gary Shores and I am a full-stack developer with a focus on the backend. I have a strong background in the MERN stack (MongoDB, Express, React, Node.js) and have experience building scalable and maintainable web applications. At the moment, I am pursuing my Master's degree in Computer Science.",
     image: "/avatar/show.png",
     keywords: "about",
   },
 };
-```
+````
 
 ### Creating Meta Data Component
 
 We need a Component that we can use on every page that uses the above metadata and add that to the `head` of the page. There is one more reason we need that we'll create this app as PWA. Copy & Paste the above code inside `components/MetaData.js`
 
 <CodeTitle title="components/MetaData.js" lang="jsx" />
-```jsx
-import Head from "next/head";
-import useWindowLocation from "@hooks/useWindowLocation";
+```jsx import Head from "next/head"; import useWindowLocation from "@hooks/useWindowLocation";
 
 export default function MetaData({
   title,
@@ -2270,47 +2167,49 @@ export default function MetaData({
 }) {
   const { currentURL } = useWindowLocation();
 
-  return (
-    <Head>
-      <meta charSet="utf-8" />
-      <meta
+return (
+<Head>
+<meta charSet="utf-8" />
+<meta
         name="viewport"
         content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
       />
-      <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="description" content={description || "Alex Ritt"} />
-      <title>{`${title || ""} Alex Ritt`}</title>
-      <meta name="theme-color" content="#000" />
-      <link rel="shortcut icon" href="/favicon.ico" />
-      <link rel="manifest" href="/manifest.json" />
-      <link rel="apple-touch-icon" href="/icons/icon-192x192.png"></link>
-      <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
-      <meta name="author" content="Alex Ritt"></meta>
-      <meta name="robots" content="index,follow" />
-      <meta
-        name="keywords"
-        content={`${keywords || ""} Alex, Alex Ritt, scarlett1130, scarlett1130_`}
-      />
+<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+<meta name="description" content={description || "Gary Shores"} />
+<title>{`${title || ""} Gary Shores`}</title>
+<meta name="theme-color" content="#000" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="apple-touch-icon" href="/icons/icon-192x192.png"></link>
+<meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="author" content="Gary Shores"></meta>
+<meta name="robots" content="index,follow" />
+<meta
+name="keywords"
+content={`${keywords || ""} Alex, Gary Shores, scarlett1130, scarlett1130_`}
+/>
 
       {/* Og */}
-      <meta property="og:title" content={`${title || ""} Alex Ritt`} />
-      <meta property="og:description" content={description || "Alex Ritt"} />
-      <meta property="og:site_name" content="Alex Ritt" />
+      <meta property="og:title" content={`${title || ""} Gary Shores`} />
+      <meta property="og:description" content={description || "Gary Shores"} />
+      <meta property="og:site_name" content="Gary Shores" />
       <meta property="og:url" content={currentURL} key="ogurl" />
       <meta property="og:image" content={previewImage || ""} />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:creator" content="@scarlett1130_" />
-      <meta name="twitter:title" content={`${title || ""} Alex Ritt`} />
+      <meta name="twitter:title" content={`${title || ""} Gary Shores`} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={previewImage || ""} />
-      <meta name="twitter:image:alt" content={title || "Alex Ritt"}></meta>
+      <meta name="twitter:image:alt" content={title || "Gary Shores"}></meta>
       <meta name="twitter:domain" content={currentURL} />
     </Head>
-  );
+
+);
 }
-```
+
+````
 
 ## Homepage
 
@@ -2356,22 +2255,19 @@ export default function Home() {
     </>
   );
 }
-```
+````
 
 The above code just adds the `meta-data` to the page. One thing we haven't created yet is `homeProfileImage`. Let's create it quick:
 
 Inside `utils/utils.js` add your profile image URL (It should be in png or jpg format)
 
 <CodeTitle title="utils/utils.js" lang="js" />
-```js
-export const homeProfileImage = "https://imgur.com/mKrXwWF.png";
-```
+```js export const homeProfileImage = "https://imgur.com/mKrXwWF.png"; ```
 
 Now we are good. We just need to add JSX to the `index.js` let's add that too.
 
 <CodeTitle title="pages/index.js" lang="jsx" />
-```jsx
-/* ...........Previous code.......... */
+```jsx /* ...........Previous code.......... */
 
 export default function Home({ blogs, skills }) {
   return (
@@ -2413,7 +2309,7 @@ export default function Home({ blogs, skills }) {
                   variants={opacityVariant}
                   className="text-5xl lg:text-6xl font-bold font-sarina"
                 >
-                  Alex Ritt
+                  Gary Shores
                 </motion.h1>
                 <motion.p
                   variants={opacityVariant}
@@ -2447,9 +2343,11 @@ export default function Home({ blogs, skills }) {
         </motion.section>
       </div>
     </>
-  );
+
+);
 }
-```
+
+````
 
 In the above code, when the resume button is Clicked, we are directing the user to `/resume` route which we have not created yet. We won't create it because we are going to use `vercel.json` to redirect the user. Let's see how we do that:
 
@@ -2472,19 +2370,12 @@ In the above code, when the resume button is Clicked, we are directing the user 
     },
   ]
 }
-```
+````
 
 The above code shows that we redirect the user from `/home` to `/` and `/resume` to `/resume.pdf`. You just need to put your resume as a pdf in the `public` directory. which will later look like this:
 
 <CodeTitle title="Files" lang="directory" />
-```text
-my-project/
-├── components
-├── pages
-└── public/
-    ├── fonts/
-    └── resume.pdf
-```
+```text my-project/ ├── components ├── pages └── public/ ├── fonts/ └── resume.pdf ```
 
 ### Skills
 
@@ -2534,9 +2425,10 @@ module.exports = [
     pinned: true,
   },
 
-  /* .....Add more..... */
+/_ .....Add more..... _/
 ];
-```
+
+````
 
 The above code returns the array of objects and each object contains three keys:
 
@@ -2560,28 +2452,32 @@ import skills from "@content/skillsData";
 export function getPinnedSkills() {
   return skills.filter((skill) => skill.pinned);
 }
-```
+````
 
 That's it, now we need to implement them in `pages/index.js`:
 
 <CodeTitle title="pages/index.js" lang="jsx" />
-```jsx
-/* ...............Previous Code........... */
-import { getPinnedSkills } from "@lib/dataFetch";
+```jsx /* ...............Previous Code........... */ import {getPinnedSkills} from "@lib/dataFetch";
 
+/_ HomePage Component _/
 
-/* HomePage Component */
-- export default function Home() {
-+ export default function Home({ skills ) {
+- export default function Home()
 
-/* .....New Code........ */
+  {
+
+* export default function Home({ skills )
+
+  {
+
+/_ .....New Code........ _/
 export async function getStaticProps() {
-  const skills = getPinnedSkills();
-  return {
-    props: { skills },
-  };
+const skills = getPinnedSkills();
+return {
+props: { skills },
+};
 }
-```
+
+````
 
 Add `getStaticProps` at the bottom of the `index.js` and call `getPinnedSkills` it returns `skills` as props which we can use inside the `Home` component.
 
@@ -2694,7 +2590,7 @@ function chooseIcon(title) {
   }
   return Icon;
 }
-```
+````
 
 In the above code, we are creating a `grid` that shows the skills with their icon. as we did not add icons to the `content/skillData.js`. So here we are choosing the Icon (I know that's not the best way). We add the windows hover animation `onMouseMove` and remove it `onMouseLeave`. We will create that in a moment. We have not created two things in the above code:
 
@@ -2706,22 +2602,19 @@ In the above code, we are creating a `grid` that shows the skills with their ico
 You can create `HomeHeading` Component in your components folder, but I create inside `pages/index.js` at the bottom:
 
 <CodeTitle title="pages/index.js" lang="jsx" />
-```jsx
-/* ......Home page Component....... */
+```jsx /* ......Home page Component....... */
 
 export function HomeHeading({ title }) {
   return (
-    <AnimatedHeading
-      className="w-full font-bold text-3xl text-left my-2 font-inter"
-      variants={headingFromLeft}
-    >
+    <AnimatedHeading className="w-full font-bold text-3xl text-left my-2 font-inter" variants={headingFromLeft}>
       {title}
     </AnimatedHeading>
   );
 }
 
-/* ......getStaticProps()....... */
-```
+/_ ......getStaticProps()....... _/
+
+````
 
 In the above code, We haven't created `AnimatedHeading` yet. You can find that [here](#animatedheading)
 
@@ -2746,7 +2639,7 @@ export function removeHoverAnimation(e) {
   e.target.style.background = null;
   e.target.style.borderImage = null;
 }
-```
+````
 
 It has two functions `showHoverAnimation` to show the animation and `removeHoverAnimation` to remove the animation the cursor is removed. After implementing that it looks something like this (It's for dark mode only):
 
@@ -2755,9 +2648,7 @@ It has two functions `showHoverAnimation` to show the animation and `removeHover
 Now we just need to import `SkillSection` into `pages/index.js`:
 
 <CodeTitle title="pages/index.js" lang="jsx" />
-```jsx
-/* ...Other imports.... */
-import BlogsSection from "@components/Home/BlogsSection";
+```jsx /* ...Other imports.... */ import BlogsSection from "@components/Home/BlogsSection";
 
 export default function Home({ blogs, skills }) {
   /*....other code */
@@ -2769,8 +2660,9 @@ export default function Home({ blogs, skills }) {
   );
 }
 
-/* ........other code....... */
-```
+/_ ........other code....... _/
+
+````
 
 ### Recent Posts
 
@@ -2793,7 +2685,7 @@ You need to install two dependencies before we start building the form:
 <CodeTitle title="terminal" lang="bash" />
 ```bash
 pnpm i react-toastify @emailjs/browser
-```
+````
 
 #### Creating Contact Component
 
@@ -2807,12 +2699,7 @@ export { default } from "./Contact";
 In the above code, we are importing `Contact` Component. let's create it:
 
 <CodeTitle title="components/Contact.js" lang="jsx" />
-```jsx
-/* importing modules */
-import React from "react";
-import { popUpFromBottomForText } from "../../content/FramerMotionVariants";
-import AnimatedHeading from "../FramerMotion/AnimatedHeading";
-import "react-toastify/dist/ReactToastify.css";
+```jsx /* importing modules */ import React from "react"; import {popUpFromBottomForText} from "../../content/FramerMotionVariants"; import AnimatedHeading from "../FramerMotion/AnimatedHeading"; import "react-toastify/dist/ReactToastify.css";
 
 import ContactForm from "./ContactForm"; // ======>> not created yet
 import AnimatedText from "../FramerMotion/AnimatedText"; // ======>> not created yet
@@ -2853,9 +2740,11 @@ export default function Contact() {
         </div>
       </section>
     </div>
-  );
+
+);
 }
-```
+
+````
 
 The above code is simple. We just didn't create two things:
 
@@ -2882,7 +2771,7 @@ import Ripples from "react-ripples";
 
 // initial State of the form
 const initialFormState = {
-  to_name: "Alex Ritt",
+  to_name: "Gary Shores",
   first_name: "",
   last_name: "",
   email: "",
@@ -3114,7 +3003,7 @@ export default function Form() {
     </>
   );
 }
-```
+````
 
 In the above code, I am just rendering the Contact Form and sending the email via emailjs. Every field is required however I am submitting a form when the user press `CTRL + Enter` as it doesn't care about the required field that's why I have to manually check that every field should be filled using `validateForm` function. It will give you a toast about if the mail is sent as shown below:
 
@@ -3137,8 +3026,7 @@ The above image shows that the Stats page has three sections:
 we will create those one by one. But first, create a file called `stats.js` inside the `pages` folder:
 
 <CodeTitle title="pages/stats.js" lang="jsx" />
-```jsx
-import React from "react";
+```jsx import React from "react";
 
 export default function Stats() {
   return <></>;
@@ -3254,17 +3142,12 @@ Now that we have added the top section of the page, let's implement the Dev.to s
 
 I have also written a blog on Dev.to API if you are interested then go to the following link:
 
-<EmbedBlog 
-  img="https://imgur.com/qAgqWls.png" 
-  text="How to use the dev.to API?" 
-  url="/blogs/dev-to-api" 
-/>
+<EmbedBlog img="https://imgur.com/qAgqWls.png" text="How to use the dev.to API?" url="/blogs/dev-to-api" />
 
 I am going to use Next.js API routes as well to fetch the data. So let's create `pages/api/stats/devto.js` file. This is going to be the API route which will return the stats.
 
 <CodeTitle title="pages/api/stats/devto.js" lang="js" />
-```jsx
-/* File: pages/api/stats/devto.js */
+```jsx /* File: pages/api/stats/devto.js */
 
 import { allFollowers, allPosts } from "@lib/devto"; // ====> not created yet
 
@@ -3272,30 +3155,31 @@ export default async function handler(req, res) {
   const followers = await allFollowers();
   const posts = await allPosts();
 
-  let totalViews = 0;
-  let totalLikes = 0;
-  let totalComments = 0;
+let totalViews = 0;
+let totalLikes = 0;
+let totalComments = 0;
 
-  posts.forEach((post) => {
-    totalLikes += post.public_reactions_count;
-    totalViews += post.page_views_count;
-    totalComments += post.comments_count;
-  });
+posts.forEach((post) => {
+totalLikes += post.public_reactions_count;
+totalViews += post.page_views_count;
+totalComments += post.comments_count;
+});
 
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=86400, stale-while-revalidate=43200"
-  );
+res.setHeader(
+"Cache-Control",
+"public, s-maxage=86400, stale-while-revalidate=43200"
+);
 
-  return res.status(200).json({
-    followers: followers,
-    likes: totalLikes,
-    views: totalViews,
-    comments: totalComments,
-    posts: posts.length,
-  });
+return res.status(200).json({
+followers: followers,
+likes: totalLikes,
+views: totalViews,
+comments: totalComments,
+posts: posts.length,
+});
 }
-```
+
+````
 
 We are using two functions `allFollowers` and `allPosts` that will return all the followers I have and all the blogs/posts I have published. Then we are iterating over each post and extracting the likes (public reactions), views, and comments. After that, I am setting Cache so that browser doesn't fetch the data again and again. we are revalidating the request every 43200 seconds which is 12 hours.
 
@@ -3363,7 +3247,7 @@ export const allPosts = async () => {
   }
   return totalPosts;
 };
-```
+````
 
 You need to add `NEXT_PUBLIC_BLOGS_API` to your `.env.local` and then restart your server. If you don't know how to get the Dev.to API, then [click here](https://dev.to/settings/extensions) and go to the bottom of the page and generate the API.
 
@@ -3372,41 +3256,40 @@ The above code has two extra functions `getPageOfFollowers` and `getPageOfPosts`
 Now let's fetch it in our `pages/stats.js`:
 
 <CodeTitle title="pages/stats.js" lang="jsx" />
-```jsx
-/* File: pages/stats.js */
+```jsx /* File: pages/stats.js */
 
-/* ..............Other modules........... */
+/_ ..............Other modules........... _/
 import StatsCard from "@components/Stats/StatsCard"; // ====> not created yet
 
 export default function Stats() {
   const { data: devto } = useSWR("/api/stats/devto", fetcher);
 
-  const stats = [
-    {
-      title: "Total Posts",
-      value: devto?.posts.toLocaleString(),
-    },
-    {
-      title: "Blog Followers",
-      value: devto?.followers.toLocaleString(),
-    },
-    {
-      title: "Blog Reactions",
-      value: devto?.likes.toLocaleString(),
-    },
-    {
-      title: "Blog Views",
-      value: devto?.views.toLocaleString(),
-    },
-    {
-      title: "Blog Comments",
-      value: devto?.comments.toLocaleString(),
-    },
-  ];
+const stats = [
+{
+title: "Total Posts",
+value: devto?.posts.toLocaleString(),
+},
+{
+title: "Blog Followers",
+value: devto?.followers.toLocaleString(),
+},
+{
+title: "Blog Reactions",
+value: devto?.likes.toLocaleString(),
+},
+{
+title: "Blog Views",
+value: devto?.views.toLocaleString(),
+},
+{
+title: "Blog Comments",
+value: devto?.comments.toLocaleString(),
+},
+];
 
-  return (
-    <>
-      {/* .......old code...... (<PageTop />) */}
+return (
+<>
+{/* .......old code...... (<PageTop />) */}
 
       {/* Enter the following code under the `PageTop` component.*/}
       {/* Blogs and github stats */}
@@ -3433,9 +3316,11 @@ export default function Stats() {
       </motion.div>
       {/* ........other code...... */}
     </>
-  );
+
+);
 }
-```
+
+````
 
 I have created an array to iterate over and then render `StatsCard` which we will create in a moment. In `StatsCard` while passing the `value` prop we check if the value is `undefined` and then pass another `div` instead of the value that is just a loader and as soon as we get the value then it will render the value.
 
@@ -3461,7 +3346,7 @@ export default function StatsCard({ title, value }) {
     </motion.div>
   );
 }
-```
+````
 
 #### Github Stats
 
@@ -3470,8 +3355,7 @@ Now we have implemented **Dev.to Stats** then Github stats will be very easy to 
 **Create `pages/api/stats/github.js`**
 
 <CodeTitle title="pages/api/stats/github.js" lang="js" />
-```js
-import { fetchGithub, getOldStats } from "@lib/github"; // ====> not created yet
+```js import {(fetchGithub, getOldStats)} from "@lib/github"; // ====> not created yet
 
 export default async function handler(req, res) {
   const {
@@ -3480,32 +3364,33 @@ export default async function handler(req, res) {
     followers,
   } = await fetchGithub();
 
-  // it runs when user's api is exhausted, it gives the old data
-  if (repos === undefined && gists === undefined) {
-    const {
-      public_repos: repos,
-      public_gists: gists,
-      followers,
-    } = getOldStats();
-    return res.status(200).json({
-      repos,
-      gists,
-      followers,
-    });
-  }
-
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=86400, stale-while-revalidate=43200"
-  );
-
-  return res.status(200).json({
-    repos,
-    gists,
-    followers,
-  });
+// it runs when user's api is exhausted, it gives the old data
+if (repos === undefined && gists === undefined) {
+const {
+public_repos: repos,
+public_gists: gists,
+followers,
+} = getOldStats();
+return res.status(200).json({
+repos,
+gists,
+followers,
+});
 }
-```
+
+res.setHeader(
+"Cache-Control",
+"public, s-maxage=86400, stale-while-revalidate=43200"
+);
+
+return res.status(200).json({
+repos,
+gists,
+followers,
+});
+}
+
+````
 
 The above code has two functions `fetchGithub` and `getOldStats`. Github API has limited request. So it might exhausted, then we need to take care of that by using mock response (old static data).
 
@@ -3531,46 +3416,45 @@ export async function fetchGithub() {
 export function getOldStats() {
   return tempData;
 }
-```
+````
 
 You can get your mock response by typing `https://api.github.com/users/<your-username>` in the browser.
 
 Now that our API has been created let's call it inside `pages/stats.js`:
 
 <CodeTitle title="pages/stats.js" lang="jsx" />
-```jsx
-/* ..............Other modules........... */
-import StatsCard from "@components/Stats/StatsCard"; // ====> not created yet
+```jsx /* ..............Other modules........... */ import StatsCard from "@components/Stats/StatsCard"; // ====> not created yet
 
 export default function Stats() {
   const { data: devto } = useSWR("/api/stats/devto", fetcher);
   const { data: github } = useSWR("/api/stats/github", fetcher);
 
-  const stats = [
-    /* ...previous blog stats key...... */
-    /* Following code is added new */
-    {
-      title: "Github Repos",
-      value: github?.repos,
-    },
-    {
-      title: "Github Gists",
-      value: github?.gists,
-    },
-    {
-      title: "Github Followers",
-      value: github?.followers,
-    },
-  ];
+const stats = [
+/* ...previous blog stats key...... */
+/* Following code is added new */
+{
+title: "Github Repos",
+value: github?.repos,
+},
+{
+title: "Github Gists",
+value: github?.gists,
+},
+{
+title: "Github Followers",
+value: github?.followers,
+},
+];
 
-  return (
-    <>
-      {/* .......old code...... */}
-      {/* We don't need to change something here it's all good here  */}
-    </>
-  );
+return (
+<>
+{/* .......old code...... */}
+{/* We don't need to change something here it's all good here */}
+</>
+);
 }
-```
+
+````
 
 That's all you need to Create the First section of the stats Page. Now we will move to the next section which is **Top Streams**
 
@@ -3636,35 +3520,35 @@ export default function Stats() {
     </>
   );
 }
-```
+````
 
 Add the following code to `pages/stats.js`. In the above code we just fetch the `/api/stats/tracks` it returns the top 10 most streamed songs, then we render those by using the `Track` Component. We have not created them yet. So let's create them.
 
 **Create `pages/api/stats/tracks.js`**:
 
 <CodeTitle title="pages/api/stats/tracks.js" lang="js" />
-```js
-import { topTracks } from "../../../lib/spotify";
+```js import {topTracks} from "../../../lib/spotify";
 
 export default async function handler(req, res) {
   const response = await topTracks();
   const { items } = await response.json();
 
-  const tracks = items.slice(0, 10).map((track) => ({
-    title: track.name,
-    artist: track.artists.map((_artist) => _artist.name).join(", "),
-    url: track.external_urls.spotify,
-    coverImage: track.album.images[1],
-  }));
+const tracks = items.slice(0, 10).map((track) => ({
+title: track.name,
+artist: track.artists.map((\_artist) => \_artist.name).join(", "),
+url: track.external_urls.spotify,
+coverImage: track.album.images[1],
+}));
 
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=86400, stale-while-revalidate=43200"
-  );
+res.setHeader(
+"Cache-Control",
+"public, s-maxage=86400, stale-while-revalidate=43200"
+);
 
-  return res.status(200).json(tracks);
+return res.status(200).json(tracks);
 }
-```
+
+````
 
 In the above code, I am getting data from `topTracks` function and then extracting the main info that I need. Let's create `topTracks`:
 
@@ -3680,18 +3564,14 @@ export const topTracks = async () => {
     },
   });
 };
-```
+````
 
 That's it for this. Now we need to create `Track` Component:
 
 **Create `components/Stats/Track.js`**
 
 <CodeTitle title="components/Stats/Track.js" lang="jsx" />
-```jsx
-import Image from "next/image";
-import Link from "next/link";
-import { fromBottomVariant } from "../../content/FramerMotionVariants";
-import { motion } from "framer-motion";
+```jsx import Image from "next/image"; import Link from "next/link"; import {fromBottomVariant} from "../../content/FramerMotionVariants"; import {motion} from "framer-motion";
 
 export default function Track({ url, title, artist, coverImage, id }) {
   return (
@@ -3727,9 +3607,11 @@ export default function Track({ url, title, artist, coverImage, id }) {
         </div>
       </motion.a>
     </Link>
-  );
+
+);
 }
-```
+
+````
 
 That's all you need to create The Top Stream Section.
 
@@ -3792,35 +3674,35 @@ export default function Stats() {
     </>
   );
 }
-```
+````
 
 Add the following code to `pages/artists.js`. In the above code we just fetch the `/api/stats/artists` it returns the top 5 most streamed artists then we render those by using the `Artist` Component. We have not created them yet. So let's create them.
 
 **Create `pages/api/stats/artists.js`**:
 
 <CodeTitle title="pages/api/stats/artists.js" lang="js" />
-```js
-import { topArtists } from "../../../lib/spotify";
+```js import {topArtists} from "../../../lib/spotify";
 
 export default async function handler(req, res) {
   const response = await topArtists();
   const { items } = await response.json();
 
-  const artists = items.slice(0, 5).map((artist) => ({
-    name: artist.name,
-    url: artist.external_urls.spotify,
-    coverImage: artist.images[1],
-    followers: artist.followers.total,
-  }));
+const artists = items.slice(0, 5).map((artist) => ({
+name: artist.name,
+url: artist.external_urls.spotify,
+coverImage: artist.images[1],
+followers: artist.followers.total,
+}));
 
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=86400, stale-while-revalidate=43200"
-  );
+res.setHeader(
+"Cache-Control",
+"public, s-maxage=86400, stale-while-revalidate=43200"
+);
 
-  return res.status(200).json(artists);
+return res.status(200).json(artists);
 }
-```
+
+````
 
 In the above we also fetch the data using `topArtists` function, let's create it inside `lib/spotify.js`:
 
@@ -3837,18 +3719,14 @@ export const topArtists = async () => {
     },
   });
 };
-```
+````
 
 Now as it has been add we need one more thing to add and that is `Artist` component:
 
 **Create `components/Stats/Artist.js`**
 
 <CodeTitle title="components/Stats/Artist.js" lang="jsx" />
-```jsx
-import Image from "next/image";
-import Link from "next/link";
-import { fromBottomVariant, popUp } from "../../content/FramerMotionVariants";
-import { motion } from "framer-motion";
+```jsx import Image from "next/image"; import Link from "next/link"; import {(fromBottomVariant, popUp)} from "../../content/FramerMotionVariants"; import {motion} from "framer-motion";
 
 export default function Track({ name, url, coverImage, followers, id }) {
   return (
@@ -3925,44 +3803,44 @@ export default function Stats() {
   const { data: devto } = useSWR("/api/stats/devto", fetcher);
   const { data: github } = useSWR("/api/stats/github", fetcher);
 
-  const stats = [
-    {
-      title: "Total Posts",
-      value: devto?.posts.toLocaleString(),
-    },
-    {
-      title: "Blog Followers",
-      value: devto?.followers.toLocaleString(),
-    },
-    {
-      title: "Blog Reactions",
-      value: devto?.likes.toLocaleString(),
-    },
-    {
-      title: "Blog Views",
-      value: devto?.views.toLocaleString(),
-    },
-    {
-      title: "Blog Comments",
-      value: devto?.comments.toLocaleString(),
-    },
-    {
-      title: "Github Repos",
-      value: github?.repos,
-    },
-    {
-      title: "Github Gists",
-      value: github?.gists,
-    },
-    {
-      title: "Github Followers",
-      value: github?.followers,
-    },
-  ];
+const stats = [
+{
+title: "Total Posts",
+value: devto?.posts.toLocaleString(),
+},
+{
+title: "Blog Followers",
+value: devto?.followers.toLocaleString(),
+},
+{
+title: "Blog Reactions",
+value: devto?.likes.toLocaleString(),
+},
+{
+title: "Blog Views",
+value: devto?.views.toLocaleString(),
+},
+{
+title: "Blog Comments",
+value: devto?.comments.toLocaleString(),
+},
+{
+title: "Github Repos",
+value: github?.repos,
+},
+{
+title: "Github Gists",
+value: github?.gists,
+},
+{
+title: "Github Followers",
+value: github?.followers,
+},
+];
 
-  return (
-    <>
-      <MetaData
+return (
+<>
+<MetaData
         title={pageMeta.stats.title}
         description={pageMeta.stats.description}
         previewImage={pageMeta.stats.image}
@@ -4074,9 +3952,11 @@ export default function Stats() {
         </div>
       </section>
     </>
-  );
+
+);
 }
-```
+
+````
 
 All the Artists and songs are clickable. If you click them, then it will take you directly to the artist or song.
 
@@ -4118,7 +3998,7 @@ module.exports = [
   },
   /* .......other objects........ */
 ];
-```
+````
 
 In the above code, you will see two sections, one where there are multiple organization objects that contain `orgLogo` and `orgName`. And the other which has the main certificate data, such as title, issuedBy, URLs and issuedDate, etc. (you can create your own data)
 
@@ -4129,16 +4009,7 @@ Now we have data, let's create a certificates page or route.
 **Create `pages/certificates.js`**
 
 <CodeTitle title="pages/certificates.js" lang="jsx" />
-```jsx
-/* importing modules */
-import MetaData from "@components/MetaData";
-import { popUpFromBottomForText } from "@content/FramerMotionVariants";
-import certificatesData from "@content/certificatesData";
-import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import AnimatedDiv from "@components/FramerMotion/AnimatedDiv";
-import PageTop from "@components/PageTop";
+```jsx /* importing modules */ import MetaData from "@components/MetaData"; import {popUpFromBottomForText} from "@content/FramerMotionVariants"; import certificatesData from "@content/certificatesData"; import Image from "next/image"; import Link from "next/link"; import {motion} from "framer-motion"; import AnimatedDiv from "@components/FramerMotion/AnimatedDiv"; import PageTop from "@components/PageTop";
 import pageMeta from "@content/meta";
 
 export default function Certificates() {
@@ -4207,9 +4078,11 @@ export default function Certificates() {
         </div>
       </section>
     </>
-  );
+
+);
 }
-```
+
+````
 
 Now your Certificates page is ready to go you will see the certificates you have added to the static data. If there is something issue, then again check the code you might have missed something. You might be wondering what is `AnimatedDiv` then you might look at the code [here](#animateddiv)
 
@@ -4242,7 +4115,7 @@ module.exports = [
 
   /* ..............Other Projects......... */
 ];
-```
+````
 
 ### Creating Project Page
 
@@ -4251,15 +4124,7 @@ As now we have just created project data, let's create the project page:
 **Create `pages/projects.js`**:
 
 <CodeTitle title="pages/projects.js" lang="jsx" />
-```jsx
-import React from "react";
-import { AnimatePresence } from "framer-motion";
-import Project from "@components/Project"; // ====> not created yet
-import Metadata from "@components/MetaData";
-import PageTop from "@components/PageTop";
-import { getProjects } from "@lib/dataFetch"; // ====> not created yet
-import AnimatedDiv from "@components/FramerMotion/AnimatedDiv";
-import { FadeContainer } from "@content/FramerMotionVariants";
+```jsx import React from "react"; import {AnimatePresence} from "framer-motion"; import Project from "@components/Project"; // ====> not created yet import Metadata from "@components/MetaData"; import PageTop from "@components/PageTop"; import {getProjects} from "@lib/dataFetch"; // ====> not created yet import AnimatedDiv from "@components/FramerMotion/AnimatedDiv"; import {FadeContainer} from "@content/FramerMotionVariants";
 import pageMeta from "@content/meta";
 
 export default function Projects({ projects }) {
@@ -4296,7 +4161,8 @@ export default function Projects({ projects }) {
         </AnimatedDiv>
       </section>
     </>
-  );
+
+);
 }
 
 export async function getStaticProps() {
@@ -4326,11 +4192,7 @@ Now we need to create a `Project` component.
 **Create `components/Project.js`**
 
 <CodeTitle title="components/Project.js" lang="jsx" />
-```jsx
-import { BsGithub } from "react-icons/bs";
-import { MdOutlineLink } from "react-icons/md";
-import Link from "next/link";
-import OgImage from "@components/OgImage"; // =========> not created yet
+```jsx import {BsGithub} from "react-icons/bs"; import {MdOutlineLink} from "react-icons/md"; import Link from "next/link"; import OgImage from "@components/OgImage"; // =========> not created yet
 
 export default function Project({ project }) {
   return (
@@ -4391,9 +4253,11 @@ export default function Project({ project }) {
         </div>
       </div>
     </div>
-  );
+
+);
 }
-```
+
+````
 
 You might be wondering what the hell is `OgImage`. It stands for **Open Graph Image** it's in `1200x630` pixels. All the websites such as Twitter, and LinkedIn shows this image when someone shares the card on their website. That's why I have created a new component called `OgImage` which we will later use on the Blogs page as well. Let's create it:
 
@@ -4426,7 +4290,7 @@ function OgImage({ src, alt, darkSrc }) {
 }
 
 export default OgImage;
-```
+````
 
 It has the ability to change the image URL based on your theme (For future use). That's all you need to create a project page.
 
@@ -4475,73 +4339,74 @@ import { FaGitAlt, FaSearch } from "react-icons/fa";
 import SVG from "@components/SVG"; //==> not created yet
 
 const utilities = {
-  title: "Utilities",
-  description:
-    "In case you are wondering What tech I use, Here's the list of what tech I'm currently using for coding on the daily basis. This list is always changing.",
-  lastUpdate: "June 30, 2022",
+title: "Utilities",
+description:
+"In case you are wondering What tech I use, Here's the list of what tech I'm currently using for coding on the daily basis. This list is always changing.",
+lastUpdate: "June 30, 2022",
 
-  /* System */
+/_ System _/
 
-  system: {
-    title: "System",
-    data: [
-      {
-        name: "VSCode",
-        description: "Primary Code editor",
-        Icon: SiVisualstudiocode,
-        link: "https://code.visualstudio.com/download",
-      },
-      {
-        name: "Andromeda",
-        description: "VS Code theme",
-        Icon: BsFillPaletteFill,
-        link: "https://marketplace.visualstudio.com/items?itemName=EliverLara.andromeda",
-      },
+system: {
+title: "System",
+data: [
+{
+name: "VSCode",
+description: "Primary Code editor",
+Icon: SiVisualstudiocode,
+link: "https://code.visualstudio.com/download",
+},
+{
+name: "Andromeda",
+description: "VS Code theme",
+Icon: BsFillPaletteFill,
+link: "https://marketplace.visualstudio.com/items?itemName=EliverLara.andromeda",
+},
 
       /* .............Other........ */
     ],
-  },
 
-  /* Coding Tools */
-  tools: {
-    title: "Coding Tools",
-    data: [
-      {
-        name: "React.js",
-        description: "Primary Front-end library",
-        Icon: SiReact,
-        link: "https://reactjs.org/",
-      },
-      {
-        name: "Next.js",
-        description: "Primary Web Development Framework",
-        Icon: SiNextdotjs,
-        link: "https://nextjs.org/",
-      },
-      /* .............Other........ */
-    ],
-  },
+},
 
-  /* Software/Applications */
+/_ Coding Tools _/
+tools: {
+title: "Coding Tools",
+data: [
+{
+name: "React.js",
+description: "Primary Front-end library",
+Icon: SiReact,
+link: "https://reactjs.org/",
+},
+{
+name: "Next.js",
+description: "Primary Web Development Framework",
+Icon: SiNextdotjs,
+link: "https://nextjs.org/",
+},
+/* .............Other........ */
+],
+},
 
-  software: {
-    title: "Software/Applications",
-    data: [
-      {
-        name: "Microsoft Todo",
-        description: "To manage all my todos",
-        Icon: SVG.MicrosoftToDo,
-        link: "https://todo.microsoft.com/tasks/",
-      },
-      {
-        name: "Raindrop.io",
-        description: "Bookmark Manager",
-        Icon: SVG.RainDrop,
-        link: "https://raindrop.io/",
-      },
-      /* .............Other......... */
-    ],
-  },
+/_ Software/Applications _/
+
+software: {
+title: "Software/Applications",
+data: [
+{
+name: "Microsoft Todo",
+description: "To manage all my todos",
+Icon: SVG.MicrosoftToDo,
+link: "https://todo.microsoft.com/tasks/",
+},
+{
+name: "Raindrop.io",
+description: "Bookmark Manager",
+Icon: SVG.RainDrop,
+link: "https://raindrop.io/",
+},
+/* .............Other......... */
+],
+},
 };
 
 export default utilities;
@@ -4557,22 +4422,18 @@ export default utilities;
 **Create `components/SVG/index.js`**
 
 <CodeTitle title="components/SVG/index.js" lang="js" />
-```jsx
-import Ditto from "./Ditto";
-import Flux from "./Flux";
-import MicrosoftToDo from "./MicrosoftToDo";
-import RainDrop from "./RainDrop";
-import ShareX from "./ShareX";
+```jsx import Ditto from "./Ditto"; import Flux from "./Flux"; import MicrosoftToDo from "./MicrosoftToDo"; import RainDrop from "./RainDrop"; import ShareX from "./ShareX";
 
 const SVG = {
-  Ditto,
-  Flux,
-  MicrosoftToDo,
-  RainDrop,
-  ShareX,
+Ditto,
+Flux,
+MicrosoftToDo,
+RainDrop,
+ShareX,
 };
 export default SVG;
-```
+
+````
 
 In this, we are importing all the icons from the `components/SVG` folder into `components/SVG/index.js` and exporting them as an object. I made all the icons using Figma then export them as SVG and put them in a separate file. Let's create other SVG Icons.
 
@@ -4616,19 +4477,18 @@ export default function Ditto() {
     </svg>
   );
 }
-```
+````
 
 #### Flux
 
 <CodeTitle title="components/SVG/Flux.js" lang="js" />
-```jsx
-import { useDarkMode } from "@context/darkModeContext";
+```jsx import {useDarkMode} from "@context/darkModeContext";
 
 export default function Flux() {
   const { isDarkMode } = useDarkMode();
 
-  return (
-    <svg
+return (
+<svg
       xmlns="http://www.w3.org/2000/svg"
       width="32"
       height="32"
@@ -4636,36 +4496,37 @@ export default function Flux() {
       fill="currentColor"
       className="utilities-svg"
     >
-      <g clipPath="url(#clip0_741_34)">
-        <path
+<g clipPath="url(#clip0_741_34)">
+<path
           d="M0 16C0 7.16344 7.16344 0 16 0V0C24.8366 0 32 7.16344 32 16V16C32 24.8366 24.8366 32 16 32V32C7.16344 32 0 24.8366 0 16V16Z"
           fill="currentColor"
         />
-        <circle
-          cx="22.6455"
-          cy="17.5662"
-          r="4.65609"
-          fill="#9B9B9B"
-          stroke={isDarkMode ? "black" : "white"}
-          strokeWidth="1"
-        />
-        <path
+<circle
+cx="22.6455"
+cy="17.5662"
+r="4.65609"
+fill="#9B9B9B"
+stroke={isDarkMode ? "black" : "white"}
+strokeWidth="1"
+/>
+<path
           d="M30.9635 28.1791C30.9635 34.0935 17.838 31.8614 11.9236 31.8614C6.00918 31.8614 1.3739 28.8871 1.3739 22.9727C-3.07865 20.8706 4.19449 12.6984 10.3075 12.6984C20.0853 12.6984 30.2863 23.5295 30.9635 28.1791Z"
           fill="#454545"
         />
-      </g>
-      <defs>
-        <clipPath id="clip0_741_34">
-          <path
+</g>
+<defs>
+<clipPath id="clip0_741_34">
+<path
             d="M0 16C0 7.16344 7.16344 0 16 0V0C24.8366 0 32 7.16344 32 16V16C32 24.8366 24.8366 32 16 32V32C7.16344 32 0 24.8366 0 16V16Z"
             fill="white"
           />
-        </clipPath>
-      </defs>
-    </svg>
-  );
+</clipPath>
+</defs>
+</svg>
+);
 }
-```
+
+````
 
 #### MicrosoftToDo
 
@@ -4743,13 +4604,12 @@ export default function MicrosoftToDo() {
     </svg>
   );
 }
-```
+````
 
 #### RainDrop
 
 <CodeTitle title="components/SVG/RainDrop.js" lang="js" />
-```jsx
-import React from "react";
+```jsx import React from "react";
 
 export default function RainDrop() {
   return (
@@ -4820,14 +4680,13 @@ export default function RainDrop() {
 #### ShareX
 
 <CodeTitle title="components/SVG/ShareX.js" lang="js" />
-```jsx
-import { useDarkMode } from "@context/darkModeContext";
+```jsx import {useDarkMode} from "@context/darkModeContext";
 
 export default function ShareX() {
   const { isDarkMode } = useDarkMode();
 
-  return (
-    <svg
+return (
+<svg
       width="32"
       height="32"
       viewBox="0 0 32 32"
@@ -4835,49 +4694,50 @@ export default function ShareX() {
       xmlns="http://www.w3.org/2000/svg"
       className="utilities-svg"
     >
-      <g clipPath="url(#clip0_736_2)">
-        <path
+<g clipPath="url(#clip0_736_2)">
+<path
           d="M25.0435 10.8953C24.9357 6.27203 21.657 2.33881 17.0616 0.753423C15.6008 0.251362 14.0664 -0.00326983 12.5217 3.16972e-05C5.60626 3.16972e-05 5.88007e-08 4.98299 5.88007e-08 11.1305C-0.000141637 12.438 0.255807 13.7328 0.753391 14.9419C2.34226 10.3465 6.272 7.06786 10.8953 6.95655C10.9732 6.95655 11.0518 6.95655 11.1304 6.95655C13.8101 6.95655 16.2692 8.02229 18.1899 9.7976C18.6346 10.2098 19.0472 10.6554 19.424 11.1305C20.9489 13.0456 21.9576 15.4922 22.2031 18.1934C23.9777 16.2692 25.0435 13.8101 25.0435 11.1305C25.0435 11.0519 25.0435 10.9739 25.0435 10.8953Z"
           fill="currentColor"
         />
-        <path
-          d="M22.2024 17.842C21.9569 15.1408 20.9503 12.6942 19.4233 10.7791C19.0465 10.3053 18.6342 9.86083 18.1899 9.44969C16.2692 7.67438 13.8101 6.60864 11.1304 6.60864C11.0518 6.60864 10.9739 6.60864 10.8953 6.60864C6.272 6.71647 2.33878 9.99508 0.753391 14.5906C0.279533 13.4404 0.0240464 12.212 5.88007e-08 10.9683C5.88007e-08 11.0226 5.88007e-08 11.0761 5.88007e-08 11.1304C-0.000141637 12.4379 0.255807 13.7327 0.753391 14.9419C2.34226 10.3464 6.272 7.06777 10.8953 6.95647C10.9732 6.95647 11.0518 6.95647 11.1304 6.95647C13.8101 6.95647 16.2692 8.02221 18.1899 9.79751C18.6346 10.2097 19.0472 10.6553 19.424 11.1304C20.9489 13.0455 21.9576 15.4921 22.2031 18.1933C23.9777 16.2692 25.0435 13.81 25.0435 11.1304C25.0435 11.0761 25.0435 11.0226 25.0435 10.9683C24.9934 13.5763 23.9367 15.9659 22.2024 17.842Z"
-          fill={isDarkMode ? "#25282a" : "#f2f5fa"}
-        />
-        <path
+<path
+d="M22.2024 17.842C21.9569 15.1408 20.9503 12.6942 19.4233 10.7791C19.0465 10.3053 18.6342 9.86083 18.1899 9.44969C16.2692 7.67438 13.8101 6.60864 11.1304 6.60864C11.0518 6.60864 10.9739 6.60864 10.8953 6.60864C6.272 6.71647 2.33878 9.99508 0.753391 14.5906C0.279533 13.4404 0.0240464 12.212 5.88007e-08 10.9683C5.88007e-08 11.0226 5.88007e-08 11.0761 5.88007e-08 11.1304C-0.000141637 12.4379 0.255807 13.7327 0.753391 14.9419C2.34226 10.3464 6.272 7.06777 10.8953 6.95647C10.9732 6.95647 11.0518 6.95647 11.1304 6.95647C13.8101 6.95647 16.2692 8.02221 18.1899 9.79751C18.6346 10.2097 19.0472 10.6553 19.424 11.1304C20.9489 13.0455 21.9576 15.4921 22.2031 18.1933C23.9777 16.2692 25.0435 13.81 25.0435 11.1304C25.0435 11.0761 25.0435 11.0226 25.0435 10.9683C24.9934 13.5763 23.9367 15.9659 22.2024 17.842Z"
+fill={isDarkMode ? "#25282a" : "#f2f5fa"}
+/>
+<path
           d="M6.95655 21.1047C6.95655 21.0268 6.95655 20.9482 6.95655 20.8696C6.95655 18.1899 8.02229 15.7308 9.7976 13.8101C11.8379 11.6021 14.8153 10.1044 18.1899 9.79759C16.2692 8.02228 13.8101 6.95654 11.1305 6.95654C11.0519 6.95654 10.9739 6.95654 10.8953 6.95654C6.27203 7.06437 2.33881 10.343 0.753423 14.9385C0.251362 16.3993 -0.00326983 17.9336 3.16972e-05 19.4783C3.16972e-05 26.3938 4.98299 32 11.1305 32C12.438 32.0002 13.7328 31.7442 14.9419 31.2466C10.3465 29.6578 7.06786 25.728 6.95655 21.1047Z"
           fill="currentColor"
         />
-        <path
-          d="M6.95647 21.1047C6.95647 21.0268 6.95647 20.9482 6.95647 20.8696C6.95647 18.1899 8.02221 15.7308 9.79751 13.8101C11.8379 11.6021 14.8153 10.1044 18.1899 9.79759C16.2692 8.02228 13.81 6.95654 11.1304 6.95654C11.0761 6.95654 11.0226 6.95654 10.9683 6.95654C13.5763 7.00454 15.9659 8.06124 17.842 9.7948C14.4674 10.1016 11.49 11.5993 9.44969 13.8073C7.67438 15.7308 6.60864 18.1899 6.60864 20.8696C6.60864 20.9482 6.60864 21.0261 6.60864 21.1047C6.71647 25.728 9.99508 29.6612 14.5906 31.2466C13.4404 31.7205 12.212 31.976 10.9683 32C11.0226 32 11.0761 32 11.1304 32C12.4379 32.0002 13.7327 31.7442 14.9419 31.2466C10.3464 29.6578 7.06777 25.728 6.95647 21.1047Z"
-          fill={isDarkMode ? "#25282a" : "#f2f5fa"}
-        />
-        <path
+<path
+d="M6.95647 21.1047C6.95647 21.0268 6.95647 20.9482 6.95647 20.8696C6.95647 18.1899 8.02221 15.7308 9.79751 13.8101C11.8379 11.6021 14.8153 10.1044 18.1899 9.79759C16.2692 8.02228 13.81 6.95654 11.1304 6.95654C11.0761 6.95654 11.0226 6.95654 10.9683 6.95654C13.5763 7.00454 15.9659 8.06124 17.842 9.7948C14.4674 10.1016 11.49 11.5993 9.44969 13.8073C7.67438 15.7308 6.60864 18.1899 6.60864 20.8696C6.60864 20.9482 6.60864 21.0261 6.60864 21.1047C6.71647 25.728 9.99508 29.6612 14.5906 31.2466C13.4404 31.7205 12.212 31.976 10.9683 32C11.0226 32 11.0761 32 11.1304 32C12.4379 32.0002 13.7327 31.7442 14.9419 31.2466C10.3464 29.6578 7.06777 25.728 6.95647 21.1047Z"
+fill={isDarkMode ? "#25282a" : "#f2f5fa"}
+/>
+<path
           d="M31.2466 17.0581C29.6578 21.6535 25.728 24.9321 21.1047 25.0434C21.0268 25.0434 20.9482 25.0434 20.8696 25.0434C18.1899 25.0434 15.7308 23.9777 13.8101 22.2024C11.6021 20.1621 10.1044 17.1847 9.79759 13.8101C8.02228 15.7308 6.95654 18.1899 6.95654 20.8695C6.95654 20.9481 6.95654 21.0261 6.95654 21.1047C7.06437 25.728 10.343 29.6612 14.9385 31.2466C16.3993 31.7486 17.9336 32.0033 19.4783 32C26.3938 32 32 27.017 32 20.8695C32.0002 19.562 31.7442 18.2672 31.2466 17.0581Z"
           fill="currentColor"
         />
-        <path
-          d="M9.79759 14.1579C10.1044 17.5325 11.6021 20.5099 13.8101 22.5502C15.7308 24.3255 18.1899 25.3913 20.8696 25.3913C20.9482 25.3913 21.0261 25.3913 21.1047 25.3913C25.728 25.2834 29.6612 22.0048 31.2466 17.4094C31.7205 18.5595 31.976 19.7879 32 21.0316C32 20.9774 32 20.9238 32 20.8695C32.0002 19.562 31.7442 18.2672 31.2466 17.0581C29.6578 21.6535 25.728 24.9321 21.1047 25.0434C21.0268 25.0434 20.9482 25.0434 20.8696 25.0434C18.1899 25.0434 15.7308 23.9777 13.8101 22.2024C11.6021 20.1621 10.1044 17.1847 9.79759 13.8101C8.02228 15.7308 6.95654 18.1899 6.95654 20.8695C6.95654 20.9238 6.95654 20.9774 6.95654 21.0316C7.00663 18.4236 8.06333 16.0341 9.79759 14.1579Z"
-          fill={isDarkMode ? "#25282a" : "#f2f5fa"}
-        />
-        <path
+<path
+d="M9.79759 14.1579C10.1044 17.5325 11.6021 20.5099 13.8101 22.5502C15.7308 24.3255 18.1899 25.3913 20.8696 25.3913C20.9482 25.3913 21.0261 25.3913 21.1047 25.3913C25.728 25.2834 29.6612 22.0048 31.2466 17.4094C31.7205 18.5595 31.976 19.7879 32 21.0316C32 20.9774 32 20.9238 32 20.8695C32.0002 19.562 31.7442 18.2672 31.2466 17.0581C29.6578 21.6535 25.728 24.9321 21.1047 25.0434C21.0268 25.0434 20.9482 25.0434 20.8696 25.0434C18.1899 25.0434 15.7308 23.9777 13.8101 22.2024C11.6021 20.1621 10.1044 17.1847 9.79759 13.8101C8.02228 15.7308 6.95654 18.1899 6.95654 20.8695C6.95654 20.9238 6.95654 20.9774 6.95654 21.0316C7.00663 18.4236 8.06333 16.0341 9.79759 14.1579Z"
+fill={isDarkMode ? "#25282a" : "#f2f5fa"}
+/>
+<path
           d="M20.8695 5.88007e-08C19.562 -0.000141637 18.2672 0.255807 17.0581 0.753391C21.6535 2.34226 24.9321 6.272 25.0434 10.8953C25.0434 10.9732 25.0434 11.0518 25.0434 11.1304C25.0434 13.8101 23.9777 16.2692 22.2024 18.1899C20.1621 20.3979 17.1847 21.8957 13.8101 22.2024C15.7308 23.9777 18.1899 25.0435 20.8695 25.0435C20.9481 25.0435 21.0261 25.0435 21.1047 25.0435C25.728 24.9357 29.6612 21.657 31.2466 17.0616C31.7486 15.6008 32.0033 14.0664 32 12.5217C32 5.60626 27.017 5.88007e-08 20.8695 5.88007e-08Z"
           fill="currentColor"
         />
-        <path
-          d="M14.1579 22.2024C17.5325 21.8957 20.5099 20.3979 22.5502 18.1899C24.3255 16.2692 25.3913 13.8101 25.3913 11.1304C25.3913 11.0518 25.3913 10.9739 25.3913 10.8953C25.2834 6.272 22.0048 2.33878 17.4094 0.753391C18.5595 0.279533 19.7879 0.0240464 21.0316 5.88007e-08C20.9774 5.88007e-08 20.9238 5.88007e-08 20.8695 5.88007e-08C19.562 -0.000141637 18.2672 0.255807 17.0581 0.753391C21.6535 2.34226 24.9321 6.272 25.0434 10.8953C25.0434 10.9732 25.0434 11.0518 25.0434 11.1304C25.0434 13.8101 23.9777 16.2692 22.2024 18.1899C20.1621 20.3979 17.1847 21.8957 13.8101 22.2024C15.7308 23.9777 18.1899 25.0435 20.8695 25.0435C20.9238 25.0435 20.9774 25.0435 21.0316 25.0435C18.4236 24.9934 16.0341 23.9367 14.1579 22.2024Z"
-          fill={isDarkMode ? "#25282a" : "#f2f5fa"}
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0_736_2">
-          <rect width="32" height="32" fill="currentColor" />
-        </clipPath>
-      </defs>
-    </svg>
-  );
+<path
+d="M14.1579 22.2024C17.5325 21.8957 20.5099 20.3979 22.5502 18.1899C24.3255 16.2692 25.3913 13.8101 25.3913 11.1304C25.3913 11.0518 25.3913 10.9739 25.3913 10.8953C25.2834 6.272 22.0048 2.33878 17.4094 0.753391C18.5595 0.279533 19.7879 0.0240464 21.0316 5.88007e-08C20.9774 5.88007e-08 20.9238 5.88007e-08 20.8695 5.88007e-08C19.562 -0.000141637 18.2672 0.255807 17.0581 0.753391C21.6535 2.34226 24.9321 6.272 25.0434 10.8953C25.0434 10.9732 25.0434 11.0518 25.0434 11.1304C25.0434 13.8101 23.9777 16.2692 22.2024 18.1899C20.1621 20.3979 17.1847 21.8957 13.8101 22.2024C15.7308 23.9777 18.1899 25.0435 20.8695 25.0435C20.9238 25.0435 20.9774 25.0435 21.0316 25.0435C18.4236 24.9934 16.0341 23.9367 14.1579 22.2024Z"
+fill={isDarkMode ? "#25282a" : "#f2f5fa"}
+/>
+</g>
+<defs>
+<clipPath id="clip0_736_2">
+<rect width="32" height="32" fill="currentColor" />
+</clipPath>
+</defs>
+</svg>
+);
 }
-```
+
+````
 
 #### UPI
 
@@ -4906,7 +4766,7 @@ export default function UPI({ className }) {
     </svg>
   );
 }
-```
+````
 
 ### Creating Utilities Page
 
@@ -4956,22 +4816,22 @@ export default function Utilities() {
         </AnimatedText>
       </section>
     </>
-  );
+
+);
 }
 
-/* Each Utility Container */
+/_ Each Utility Container _/
 function UtilitySection({ utility }) {
-  return (
-    <AnimatedDiv
+return (
+<AnimatedDiv
       variants={FadeContainer}
       className="!w-full  selection:bg-blue-300 dark:selection:bg-blue-900 dark:selection:text-gray-400 dark:text-neutral-200 font-medium"
     >
-      <motion.h2
-        variants={popUpFromBottomForText}
-        className="font-bold text-2xl sm:text-3xl font-barlow mb-4"
-      >
-        {utility.title}
-      </motion.h2>
+<motion.h2
+variants={popUpFromBottomForText}
+className="font-bold text-2xl sm:text-3xl font-barlow mb-4" >
+{utility.title}
+</motion.h2>
 
       <AnimatedDiv
         variants={FadeContainer}
@@ -4998,9 +4858,11 @@ function UtilitySection({ utility }) {
         })}
       </AnimatedDiv>
     </AnimatedDiv>
-  );
+
+);
 }
-```
+
+````
 
 In this, we are passing all the utility objects as props to `UtilitySection` which will render each section along with an Icon and data. It is a clickable link with the initial and hovers animation.
 
@@ -5034,23 +4896,14 @@ image: cover image url (required) https://imgur.com/zvS1Eyu.png
 ---
 
 .............you content goes here.................
-```
+````
 
 The above code contains `frontMatter` at the top and the main content at the bottom. The front matter won't be visible to the user it is just to get the details of the blog. **Filename and the `slug` have to be exactly the same.** you can change `published` to `false` if you don't want to show the blog in the list.
 
 File directory will look something like this:
 
 <CodeTitle title="Files" lang="directory" />
-```text
-my-project/
-├── components/
-├── pages/
-├── public/
-└── posts/
-    ├── temp.mdx
-    ├── blog-2.mdx
-    └── this-is-new-blog.mdx
-```
+```text my-project/ ├── components/ ├── pages/ ├── public/ └── posts/ ├── temp.mdx ├── blog-2.mdx └── this-is-new-blog.mdx ```
 
 If the slug is long then separate them by a hyphen (-). Now you know you have a blog file inside your directory. We just need to read that and render it as HTML. Let's create the `MDXContent` class in the `lib` directory.
 
@@ -5071,16 +4924,7 @@ We need to install some dependencies to make this work here is the list you need
 **Creating `lib/MDXContent.js`**
 
 <CodeTitle title="lib/MDXContent.js" lang="js" />
-```jsx
-import path from "path";
-import { readFileSync } from "fs";
-import { sync } from "glob";
-import matter from "gray-matter";
-import { serialize } from "next-mdx-remote/serialize";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import readTime from "reading-time";
-import rehypePrettyCode from "rehype-pretty-code";
+```jsx import path from "path"; import {readFileSync} from "fs"; import {sync} from "glob"; import matter from "gray-matter"; import {serialize} from "next-mdx-remote/serialize"; import rehypeSlug from "rehype-slug"; import rehypeAutolinkHeadings from "rehype-autolink-headings"; import readTime from "reading-time"; import rehypePrettyCode from "rehype-pretty-code";
 
 export default class MDXContent {
   /* Takes folder as argument and find all the files inside that */
@@ -5088,25 +4932,26 @@ export default class MDXContent {
     this.POST_PATH = path.join(process.cwd(), folderName);
   }
 
-  /* Get all the slugs in the requested folder which has .mdx extension
-   * It splits the path and gets only the slug part
-   */
+/\* Get all the slugs in the requested folder which has .mdx extension
+
+- It splits the path and gets only the slug part
+  _/
   getSlugs() {
-    const paths = sync(`${this.POST_PATH}/*.mdx`);
-    return paths.map((path) => {
-      const parts = path.split("/");
-      const fileName = parts[parts.length - 1];
-      const [slug, _ext] = fileName.split(".");
-      return slug;
-    });
+  const paths = sync(`${this.POST_PATH}/_.mdx`);
+  return paths.map((path) => {
+  const parts = path.split("/");
+  const fileName = parts[parts.length - 1];
+  const [slug, _ext] = fileName.split(".");
+  return slug;
+  });
   }
 
-  /* It's just to get the front matter not the full blog  */
-  getFrontMatter(slug) {
-    const postPath = path.join(this.POST_PATH, `${slug}.mdx`);
-    const source = readFileSync(postPath);
-    const { content, data } = matter(source);
-    const readingTime = readTime(content);
+/_ It's just to get the front matter not the full blog _/
+getFrontMatter(slug) {
+const postPath = path.join(this.POST_PATH, `${slug}.mdx`);
+const source = readFileSync(postPath);
+const { content, data } = matter(source);
+const readingTime = readTime(content);
 
     if (data.published) {
       return {
@@ -5120,14 +4965,15 @@ export default class MDXContent {
         image: data.image ?? "https://imgur.com/aNqa9cE.png",
       };
     }
-  }
 
-  /* get the single post from slug (it's a full post with the content)  */
-  async getPostFromSlug(slug, force = false) {
-    const postPath = path.join(this.POST_PATH, `${slug}.mdx`);
-    const source = readFileSync(postPath);
-    const { content, data } = matter(source);
-    if (!data.published && !force) return { post: null };
+}
+
+/_ get the single post from slug (it's a full post with the content) _/
+async getPostFromSlug(slug, force = false) {
+const postPath = path.join(this.POST_PATH, `${slug}.mdx`);
+const source = readFileSync(postPath);
+const { content, data } = matter(source);
+if (!data.published && !force) return { post: null };
 
     // getting front matter
     const frontMatter = this.getFrontMatter(slug);
@@ -5168,47 +5014,44 @@ export default class MDXContent {
         meta: frontMatter,
       },
     };
-  }
 
-  /* Getting all posts 
-    - First find all slugs
-    - then map for each slug and get the front matter of that post
-    - then filter the posts by date 
-    - return as an array
-  */
-  getAllPosts() {
-    const posts = this.getSlugs()
-      .map((slug) => {
-        return this.getFrontMatter(slug, false);
-      })
-      .filter((post) => post != null || post != undefined) // Filter post if it is not published
-      .sort((a, b) => {
-        if (new Date(a.date) > new Date(b.date)) return -1;
-        if (new Date(a.date) < new Date(b.date)) return 1;
-        return 0;
-      });
+}
+
+/_ Getting all posts - First find all slugs - then map for each slug and get the front matter of that post - then filter the posts by date - return as an array
+_/
+getAllPosts() {
+const posts = this.getSlugs()
+.map((slug) => {
+return this.getFrontMatter(slug, false);
+})
+.filter((post) => post != null || post != undefined) // Filter post if it is not published
+.sort((a, b) => {
+if (new Date(a.date) > new Date(b.date)) return -1;
+if (new Date(a.date) < new Date(b.date)) return 1;
+return 0;
+});
 
     return posts;
-  }
 
-  /* Generate the table of contents for the blog
-    - using a regular expression to get the headings of the blog only h2 to h6 then 
-    - then generating levels a heading and removing # from the heading and returning as an array
-  */
-  getTableOfContents(markdown) {
-    const regXHeader = /#{2,6}.+/g;
-    const headingArray = markdown.match(regXHeader)
-      ? markdown.match(regXHeader)
-      : [];
-    return headingArray.map((heading) => {
-      return {
-        level: heading.split("#").length - 1 - 2, // we starts from the 2nd heading that's why we subtract 2 and 1 is extra heading text
-        heading: heading.replace(/#{2,6}/, "").trim(),
-      };
-    });
-  }
 }
-```
+
+/_ Generate the table of contents for the blog - using a regular expression to get the headings of the blog only h2 to h6 then - then generating levels a heading and removing # from the heading and returning as an array
+_/
+getTableOfContents(markdown) {
+const regXHeader = /#{2,6}.+/g;
+const headingArray = markdown.match(regXHeader)
+? markdown.match(regXHeader)
+: [];
+return headingArray.map((heading) => {
+return {
+level: heading.split("#").length - 1 - 2, // we starts from the 2nd heading that's why we subtract 2 and 1 is extra heading text
+heading: heading.replace(/#{2,6}/, "").trim(),
+};
+});
+}
+}
+
+````
 
 This is all you need to manage the blog. You can get the single post using `getPostFromSlug` and if you want to get all the posts then use `getAllPosts`.
 
@@ -5375,7 +5218,7 @@ export async function getStaticProps() {
     props: { blogs },
   };
 }
-```
+````
 
 In the above code, I am getting blogs using `new MDXContent("posts").getAllPosts()` and then passing them as props to the client. On the client side, I create a UI and then render the `Blog` component. Also creating a realtime search for blogs. But we haven't implemented the following things in the above code:
 
@@ -5386,11 +5229,7 @@ In the above code, I am getting blogs using `new MDXContent("posts").getAllPosts
 ### Creating Blog Component
 
 <CodeTitle title="components/Blog.js" lang="jsx" />
-```jsx
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
-import OgImage from "./OgImage";
+```jsx import Link from "next/link"; import {(motion, AnimatePresence)} from "framer-motion"; import {(useEffect, useState)} from "react"; import OgImage from "./OgImage";
 
 export default function Blog({ blog }) {
   return (
@@ -5421,16 +5260,18 @@ export default function Blog({ blog }) {
         </div>
       </div>
     </article>
-  );
+
+);
 }
-```
+
+````
 
 This is the Blog card that we will see on the home page. Now, as I mentioned earlier, it has a functionality to add them as bookmarks using Local Storage. If you haven't heard about this then I have made a blog that explains it a little bit better.
 
-<EmbedBlog 
-  img="https://imgur.com/fAg6vHU.png" 
-  text="How to use Web Storage API?" 
-  url="/blogs/web-storage-api" 
+<EmbedBlog
+  img="https://imgur.com/fAg6vHU.png"
+  text="How to use Web Storage API?"
+  url="/blogs/web-storage-api"
 />
 
 ### Adding Bookmark Support
@@ -5503,7 +5344,7 @@ const useBookmarkBlogs = (key, defaultValue) => {
 };
 
 export default useBookmarkBlogs;
-```
+````
 
 The above code consists of a hook that adds and removes the blog from the `localStorage` or bookmark. It returns four things-
 
@@ -5515,37 +5356,35 @@ The above code consists of a hook that adds and removes the blog from the `local
 Now as we have just created a hook now we need to use this functionality. Let's use it:
 
 <CodeTitle title="components/Blog.js" lang="jsx" />
-```jsx
-/* ..........imported modules......... */
-import useLocalStorage from "@hooks/useBookmarkBlogs";
+```jsx /* ..........imported modules......... */ import useLocalStorage from "@hooks/useBookmarkBlogs";
 
 export default function Blog({ blog }) {
   const { isAlreadyBookmarked, addToBookmark, removeFromBookmark } =
     useLocalStorage("blogs", []);
   const [bookmarkModal, setBookmarkModal] = useState({ show: false, text: "" });
 
-  useEffect(() => {
-    if (bookmarkModal.text != "") {
-      setTimeout(() => {
-        setBookmarkModal({ show: false, text: "" });
-      }, 2000);
-    }
-  }, [bookmarkModal]);
+useEffect(() => {
+if (bookmarkModal.text != "") {
+setTimeout(() => {
+setBookmarkModal({ show: false, text: "" });
+}, 2000);
+}
+}, [bookmarkModal]);
 
-  function handleBookmark() {
-    if (isAlreadyBookmarked(blog.slug)) {
-      removeFromBookmark(blog.slug);
-      setBookmarkModal({ show: true, text: "Removed from Bookmarks" });
-    } else {
-      addToBookmark(blog);
-      setBookmarkModal({ show: true, text: "Added to Bookmarks" });
-    }
-  }
+function handleBookmark() {
+if (isAlreadyBookmarked(blog.slug)) {
+removeFromBookmark(blog.slug);
+setBookmarkModal({ show: true, text: "Removed from Bookmarks" });
+} else {
+addToBookmark(blog);
+setBookmarkModal({ show: true, text: "Added to Bookmarks" });
+}
+}
 
-  return (
-    <article className="card">
-      <div className="relative mt-4 flex items-center justify-between overflow-hidden">
-        {/* Just below the Read more button add the following code */}
+return (
+<article className="card">
+<div className="relative mt-4 flex items-center justify-between overflow-hidden">
+{/* Just below the Read more button add the following code */}
 
         <button
           title="Save for Later"
@@ -5579,9 +5418,11 @@ export default function Blog({ blog }) {
         {/* End of the Code */}
       </div>
     </article>
-  );
+
+);
 }
-```
+
+````
 
 This is enough to add the remove the blogs to bookmark. Now Let's create a **Bookmark** page where user can view their bookmarked blogs.
 
@@ -5640,7 +5481,7 @@ export default function Blogs() {
     </>
   );
 }
-```
+````
 
 After that this page looks something like this and it will be available at [localhost:3000/blogs/bookmark](http://localhost:3000/blogs/bookmark)
 
@@ -5657,37 +5498,35 @@ pnpm i rss
 **Create `lib/generateRssFeed.js`**
 
 <CodeTitle title="lib/generateRssFeed.js" lang="js" />
-```jsx
-import { writeFileSync } from "fs";
-import MDXContent from "@lib/MDXContent";
-import RSS from "rss";
+```jsx import {writeFileSync} from "fs"; import MDXContent from "@lib/MDXContent"; import RSS from "rss";
 
 export default async function getRSS() {
   const siteURL = "https://yourdomain.com";
   const allBlogs = new MDXContent("posts").getAllPosts();
 
-  const feed = new RSS({
-    title: "Your Name",
-    description: "your description",
-    site_url: siteURL,
-    feed_url: `${siteURL}/feed.xml`,
-    language: "en",
-    pubDate: new Date(),
-    copyright: `All rights reserved ${new Date().getFullYear()}, Your Name`,
-  });
+const feed = new RSS({
+title: "Your Name",
+description: "your description",
+site_url: siteURL,
+feed_url: `${siteURL}/feed.xml`,
+language: "en",
+pubDate: new Date(),
+copyright: `All rights reserved ${new Date().getFullYear()}, Your Name`,
+});
 
-  allBlogs.map((post) => {
-    feed.item({
-      title: post.title,
-      url: `${siteURL}/blogs/${post.slug}`,
-      date: post.date,
-      description: post.excerpt,
-    });
-  });
+allBlogs.map((post) => {
+feed.item({
+title: post.title,
+url: `${siteURL}/blogs/${post.slug}`,
+date: post.date,
+description: post.excerpt,
+});
+});
 
-  writeFileSync("./public/feed.xml", feed.xml({ indent: true }));
+writeFileSync("./public/feed.xml", feed.xml({ indent: true }));
 }
-```
+
+````
 
 In the above code, we are fetching all the posts that we have and then Adding each blog as the feed item. This will create a `feed.xml` file inside the `public` folder. One more thing we need to call this function as well.
 
@@ -5703,16 +5542,11 @@ export async function getStaticProps() {
   await generateRSS(); // calling to generate the feed
   // ........
 }
-```
+````
 
 If you want to learn another method to add the RSS then consider the following Blog:
 
-
-<EmbedBlog 
-  img="https://imgur.com/MuMZbDH.png" 
-  text="How to add RSS feed in Next.js Blog" 
-  url="/blogs/rss-feed-for-nextjs" 
-/>
+<EmbedBlog img="https://imgur.com/MuMZbDH.png" text="How to add RSS feed in Next.js Blog" url="/blogs/rss-feed-for-nextjs" />
 
 ### Creating Individual Blog Pages
 
@@ -5721,29 +5555,20 @@ This is basically a `[slug]` page which means that when users visit the individu
 First install [next-mdx-remote](https://www.npmjs.com/package/next-mdx-remote) and [highlight.js](https://www.npmjs.com/package/highlight.js).
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-pnpm i next-mdx-remote highlight.js
-```
+```bash pnpm i next-mdx-remote highlight.js ```
 
 **Create `pages/blogs/[slug].js`**
 
 <CodeTitle title="pages/blogs/[slug].js" lang="jsx" />
-```jsx
-import { useEffect } from "react";
-import BlogLayout from "@layout/BlogLayout"; // ========> not created yet
-import Metadata from "@components/MetaData";
-import MDXComponents from "@components/MDXComponents"; // =====> will create in the end of the section
-import PageNotFound from "pages/404"; // =======> not created yet
-import MDXContent from "@lib/MDXContent";
-import { MDXRemote } from "next-mdx-remote";
+```jsx import {useEffect} from "react"; import BlogLayout from "@layout/BlogLayout"; // ========> not created yet import Metadata from "@components/MetaData"; import MDXComponents from "@components/MDXComponents"; // =====> will create in the end of the section import PageNotFound from "pages/404"; // =======> not created yet import MDXContent from "@lib/MDXContent"; import {MDXRemote} from "next-mdx-remote";
 import "highlight.js/styles/atom-one-dark.css";
 
 export default function Post({ post, error }) {
   if (error) return <PageNotFound />;
 
-  return (
-    <>
-      <Metadata
+return (
+<>
+<Metadata
         title={post.meta.title}
         description={post.meta.excerpt}
         previewImage={post.meta.image}
@@ -5758,47 +5583,49 @@ export default function Post({ post, error }) {
         />
       </BlogLayout>
     </>
-  );
+
+);
 }
 
-/* Generating the page for every slug */
+/_ Generating the page for every slug _/
 export async function getStaticProps({ params }) {
-  const { slug } = params;
-  const { post } = await new MDXContent("posts").getPostFromSlug(slug);
+const { slug } = params;
+const { post } = await new MDXContent("posts").getPostFromSlug(slug);
 
-  if (post != null) {
-    return {
-      props: {
-        error: false,
-        post: {
-          meta: post.meta,
-          source: post.content,
-          tableOfContents: post.tableOfContents,
-        },
-      },
-    };
-  } else {
-    return {
-      props: {
-        error: true,
-        post: null,
-      },
-    };
-  }
+if (post != null) {
+return {
+props: {
+error: false,
+post: {
+meta: post.meta,
+source: post.content,
+tableOfContents: post.tableOfContents,
+},
+},
+};
+} else {
+return {
+props: {
+error: true,
+post: null,
+},
+};
+}
 }
 
-/* Generating all possible paths for the slug */
+/_ Generating all possible paths for the slug _/
 export async function getStaticPaths() {
-  const paths = new MDXContent("posts")
-    .getSlugs()
-    .map((slug) => ({ params: { slug } }));
+const paths = new MDXContent("posts")
+.getSlugs()
+.map((slug) => ({ params: { slug } }));
 
-  return {
-    paths,
-    fallback: false,
-  };
+return {
+paths,
+fallback: false,
+};
 }
-```
+
+````
 
 The above code just takes all the slugs and generates the paths and then those paths (which are slugs) use to generate the individual page for each slug. We need to create two things now `PageNotFound` and `BlogLayout`.
 
@@ -5835,31 +5662,14 @@ export default function PageNotFound() {
     </>
   );
 }
-```
+````
 
 #### Creating `BlogLayout` Component
 
 <CodeTitle title="layout/BlogLayout.js" lang="jsx" />
-```jsx
-import { AvatarImage } from "../utils/utils"; // =========> not created
-import Image from "next/image";
-import styles from "../styles/Blog.module.css"; // =========> not created
-import ShareOnSocialMedia from "../components/ShareOnSocialMedia"; // =========> not created
-import { FiPrinter } from "react-icons/fi";
-import { TbEdit } from "react-icons/tb";
-import Newsletter from "../components/Newsletter"; // =========> not created
-import Link from "next/link";
-import useWindowLocation from "@hooks/useWindowLocation";
-import ScrollProgressBar from "@components/ScrollProgressBar"; // =========> not created
-import { stringToSlug } from "@lib/toc"; // =========> not created
-import { useState, useEffect } from "react";
-import { lockScroll, removeScrollLock } from "@utils/functions"; // =========> not created
-import useWindowSize from "@hooks/useWindowSize"; // =========> not created
-import { FadeContainer, opacityVariant } from "@content/FramerMotionVariants";
-import AnimatedHeading from "@components/FramerMotion/AnimatedHeading";
-import AnimatedDiv from "@components/FramerMotion/AnimatedDiv";
-import useBookmarkBlogs from "@hooks/useBookmarkBlogs";
-import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+```jsx import {AvatarImage} from "../utils/utils"; // =========> not created import Image from "next/image"; import styles from "../styles/Blog.module.css"; // =========> not created import ShareOnSocialMedia from "../components/ShareOnSocialMedia"; // =========> not created import {FiPrinter} from "react-icons/fi"; import {TbEdit} from "react-icons/tb"; import Newsletter from "../components/Newsletter";
+// =========> not created import Link from "next/link"; import useWindowLocation from "@hooks/useWindowLocation"; import ScrollProgressBar from "@components/ScrollProgressBar"; // =========> not created import {stringToSlug} from "@lib/toc"; // =========> not created import {(useState, useEffect)} from "react"; import {(lockScroll, removeScrollLock)} from "@utils/functions"; // =========> not created
+import useWindowSize from "@hooks/useWindowSize"; // =========> not created import {(FadeContainer, opacityVariant)} from "@content/FramerMotionVariants"; import AnimatedHeading from "@components/FramerMotion/AnimatedHeading"; import AnimatedDiv from "@components/FramerMotion/AnimatedDiv"; import useBookmarkBlogs from "@hooks/useBookmarkBlogs"; import {(BsBookmark, BsBookmarkFill)} from "react-icons/bs";
 import useScrollPercentage from "@hooks/useScrollPercentage";
 
 export default function BlogLayout({ post, children }) {
@@ -5867,43 +5677,42 @@ export default function BlogLayout({ post, children }) {
   const [isTOCActive, setIsTOCActive] = useState(false);
   const [alreadyBookmarked, setAlreadyBookmarked] = useState(false);
 
-  const scrollPercentage = useScrollPercentage();
+const scrollPercentage = useScrollPercentage();
 
-  const size = useWindowSize();
+const size = useWindowSize();
 
-  const { isAlreadyBookmarked, addToBookmark, removeFromBookmark } =
-    useBookmarkBlogs("blogs", []);
+const { isAlreadyBookmarked, addToBookmark, removeFromBookmark } =
+useBookmarkBlogs("blogs", []);
 
-  useEffect(() => {
-    // In Case user exists from mobile to desktop then remove the scroll lock and TOC active to false
-    if (size.width > 768) {
-      removeScrollLock();
-      setIsTOCActive(false);
-    }
-  }, [size]);
+useEffect(() => {
+// In Case user exists from mobile to desktop then remove the scroll lock and TOC active to false
+if (size.width > 768) {
+removeScrollLock();
+setIsTOCActive(false);
+}
+}, [size]);
 
-  useEffect(() => {
-    setAlreadyBookmarked(isAlreadyBookmarked(post.meta.slug));
-  }, [isAlreadyBookmarked, post.meta.slug]);
+useEffect(() => {
+setAlreadyBookmarked(isAlreadyBookmarked(post.meta.slug));
+}, [isAlreadyBookmarked, post.meta.slug]);
 
-  return (
-    <section className="mt-[44px] md:mt-[60px]  relative !overflow-hidden">
-      {/* TOC */}
-      <div
-        className={`fixed h-full ${
+return (
+<section className="mt-[44px] md:mt-[60px]  relative !overflow-hidden">
+{/* TOC */}
+<div
+className={`fixed h-full ${
           isTOCActive
             ? "left-0 opacity-100 top-[44px] md:top-[60px]"
             : "-left-full opacity-0"
         } ${
           scrollPercentage > 95 ? "xl:-left-full" : "xl:left-0"
-        } md:left-0 md:opacity-100 md:max-w-[35%] lg:max-w-[30%]  transition-all duration-500 flex flex-col gap-1 !pb-[100px] overflow-y-scroll p-10 md:p-14 h-screen fixed w-full font-barlow bg-darkWhite dark:bg-darkPrimary text-neutral-800 dark:text-gray-200 z-50 `}
-      >
-        <AnimatedHeading
+        } md:left-0 md:opacity-100 md:max-w-[35%] lg:max-w-[30%]  transition-all duration-500 flex flex-col gap-1 !pb-[100px] overflow-y-scroll p-10 md:p-14 h-screen fixed w-full font-barlow bg-darkWhite dark:bg-darkPrimary text-neutral-800 dark:text-gray-200 z-50 `} >
+<AnimatedHeading
           variants={opacityVariant}
           className="font-bold text-xl md:text-2xl -ml-[5px] md:-ml-[6px]"
         >
-          Table of Contents
-        </AnimatedHeading>
+Table of Contents
+</AnimatedHeading>
 
         <AnimatedDiv
           variants={FadeContainer}
@@ -5963,7 +5772,7 @@ export default function BlogLayout({ post, children }) {
           <div className="flex items-center gap-2 w-full">
             <div className="relative grid">
               <Image
-                alt="Alex Ritt"
+                alt="Gary Shores"
                 height={30}
                 width={30}
                 src={AvatarImage}
@@ -5973,7 +5782,7 @@ export default function BlogLayout({ post, children }) {
             </div>
             <div className="flex flex-col sm:flex-row sm:justify-between w-full">
               <p className="text-sm  flex items-center gap-2 font-medium !my-0">
-                <span>Alex Ritt</span>
+                <span>Gary Shores</span>
                 <span>•</span>
                 <span>{post.meta.stringDate}</span>
               </p>
@@ -6052,9 +5861,11 @@ export default function BlogLayout({ post, children }) {
         </div>
       </section>
     </section>
-  );
+
+);
 }
-```
+
+````
 
 I know this is a lot to take in. But I'll try to explain one by one this `BlogLayout` component has several sections-
 
@@ -6074,7 +5885,7 @@ The last two are self-explanatory. There are many things that we have not create
 /* ............... */
 export const AvatarImage = "https://imgur.com/yaefpD9.png";
 /* ............... */
-```
+````
 
 **Creating Blog Styles**
 
@@ -6085,11 +5896,11 @@ export const AvatarImage = "https://imgur.com/yaefpD9.png";
 }
 
 .blog img {
-  @apply !mx-auto rounded-lg;
+@apply !mx-auto rounded-lg;
 }
 .blog a,
 .blog > ul > li > a {
-  @apply text-blue-500 underline;
+@apply text-blue-500 underline;
 }
 
 .blog h1,
@@ -6098,43 +5909,43 @@ export const AvatarImage = "https://imgur.com/yaefpD9.png";
 .blog h4,
 .blog h5,
 .blog h6 {
-  @apply my-2;
+@apply my-2;
 }
 
 .blog blockquote {
-  @apply border-l-4 border-gray-500 pl-3;
+@apply border-l-4 border-gray-500 pl-3;
 }
 .blog blockquote img {
-  @apply !mx-0 !my-1;
+@apply !mx-0 !my-1;
 }
 
 .blog blockquote p {
-  @apply text-gray-500;
+@apply text-gray-500;
 }
 
 .blog > div > table > thead > tr > th {
-  @apply border border-black text-teal-500 text-center !p-2 !font-bold;
+@apply border border-black text-teal-500 text-center !p-2 !font-bold;
 }
 .blog > div > table > thead {
-  @apply !text-gray-800;
+@apply !text-gray-800;
 }
 .blog > div > table tbody > tr > td {
-  @apply border border-black !p-2 table-cell;
+@apply border border-black !p-2 table-cell;
 }
 
 .blog > figure {
-  @apply rounded-md mx-auto overflow-hidden;
+@apply rounded-md mx-auto overflow-hidden;
 }
 
 .blog > figure img {
-  @apply mx-auto my-0 rounded-lg;
+@apply mx-auto my-0 rounded-lg;
 }
 .blog > figure figcaption {
-  @apply text-center text-sm font-medium italic text-gray-500 max-w-xl  mx-auto;
+@apply text-center text-sm font-medium italic text-gray-500 max-w-xl mx-auto;
 }
 
 .blog code {
-  @apply bg-gray-600 text-white;
+@apply bg-gray-600 text-white;
 }
 
 .blog h1 code,
@@ -6143,32 +5954,33 @@ export const AvatarImage = "https://imgur.com/yaefpD9.png";
 .blog h4 code,
 .blog h5 code,
 .blog h6 code {
-  @apply bg-transparent font-semibold my-2 text-blue-500;
+@apply bg-transparent font-semibold my-2 text-blue-500;
 }
 
 .blog div[data-rehype-pretty-code-title] {
-  @apply bg-[#1f2937] rounded-tl-md rounded-tr-md border-b text-gray-500 dark:text-white w-full;
+@apply bg-[#1f2937] rounded-tl-md rounded-tr-md border-b text-gray-500 dark:text-white w-full;
 }
 
 .blog > div[data-rehype-pretty-code-fragment] {
-  @apply -mt-[6px] !-z-10;
+@apply -mt-[6px] !-z-10;
 }
 
-/* Main code */
+/_ Main code _/
 .blog > div[data-rehype-pretty-code-fragment] > pre,
 .blog > pre {
-  @apply my-0 border border-gray-50/50 rounded-bl-md rounded-br-md mb-4 sm:text-sm w-full !p-0;
+@apply my-0 border border-gray-50/50 rounded-bl-md rounded-br-md mb-4 sm:text-sm w-full !p-0;
 }
 
 .blog > div[data-rehype-pretty-code-fragment] code {
-  @apply grid;
+@apply grid;
 }
 
-/* Main Heading of the Blog */
+/_ Main Heading of the Blog _/
 .blog h2 {
-  @apply text-2xl;
+@apply text-2xl;
 }
-```
+
+````
 
 **Creating `lockScroll` and `removeScrollLock`**
 
@@ -6182,7 +5994,7 @@ export function removeScrollLock() {
   const root = document.getElementsByTagName("html")[0];
   root.classList.remove("lock-scroll"); // class is define in the global.css
 }
-```
+````
 
 **Creating `useWindowSize` hook**
 
@@ -6269,37 +6081,38 @@ This Progress bar shows how much of the article you have read. It shows the prog
 ![scroll](https://i.imgur.com/0OQkk7x.gif)
 
 <CodeTitle title="components/ScrollProgressBar.js" lang="jsx" />
-```jsx
-import { useCallback, useEffect, useState } from "react";
+```jsx import {(useCallback, useEffect, useState)} from "react";
 
 export default function ScrollProgressBar() {
   const [scroll, setScroll] = useState(0);
 
-  const progressBarHandler = useCallback(() => {
-    const totalScroll = document.documentElement.scrollTop;
-    const windowHeight =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
-    const scroll = `${totalScroll / windowHeight}`;
+const progressBarHandler = useCallback(() => {
+const totalScroll = document.documentElement.scrollTop;
+const windowHeight =
+document.documentElement.scrollHeight -
+document.documentElement.clientHeight;
+const scroll = `${totalScroll / windowHeight}`;
 
     setScroll(scroll);
-  }, []);
 
-  useEffect(() => {
-    window.addEventListener("scroll", progressBarHandler);
-    return () => window.removeEventListener("scroll", progressBarHandler);
-  }, [progressBarHandler]);
-  return (
-    <div
-      className="!fixed left-0 w-full h-1 bg-black dark:bg-white origin-top-left  transform duration-300  top-[44px] sm:top-[63.5px] md:top-[60px]"
-      style={{
+}, []);
+
+useEffect(() => {
+window.addEventListener("scroll", progressBarHandler);
+return () => window.removeEventListener("scroll", progressBarHandler);
+}, [progressBarHandler]);
+return (
+<div
+className="!fixed left-0 w-full h-1 bg-black dark:bg-white origin-top-left transform duration-300 top-[44px] sm:top-[63.5px] md:top-[60px]"
+style={{
         transform: `scale(${scroll},1)`,
         zIndex: 100,
       }}
-    />
-  );
+/>
+);
 }
-```
+
+````
 
 #### Newsletter Component
 
@@ -6440,7 +6253,7 @@ export default function Newsletter() {
     </>
   );
 }
-```
+````
 
 **Creating API Route for Newsletter**
 
@@ -6452,32 +6265,33 @@ export default async function handler(req, res) {
   const body = req.body;
   const { email } = JSON.parse(body);
 
-  if (!email) {
-    return res.status(400).json({
-      error: true,
-      msg: "Forgot to add your email?",
-    });
-  }
-
-  const result = await fetch("https://www.getrevue.co/api/v2/subscribers", {
-    method: "POST",
-    headers: {
-      Authorization: `Token ${process.env.REVUE_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
-  const data = await result.json();
-  if (!result.ok) {
-    return res.status(500).json({ error: true, msg: data.error.email[0] });
-  }
-
-  return res.status(201).json({
-    error: false,
-    msg: "Voilà, you are on my list. Please check your inbox",
-  });
+if (!email) {
+return res.status(400).json({
+error: true,
+msg: "Forgot to add your email?",
+});
 }
-```
+
+const result = await fetch("https://www.getrevue.co/api/v2/subscribers", {
+method: "POST",
+headers: {
+Authorization: `Token ${process.env.REVUE_API_KEY}`,
+"Content-Type": "application/json",
+},
+body: JSON.stringify({ email }),
+});
+const data = await result.json();
+if (!result.ok) {
+return res.status(500).json({ error: true, msg: data.error.email[0] });
+}
+
+return res.status(201).json({
+error: false,
+msg: "Voilà, you are on my list. Please check your inbox",
+});
+}
+
+````
 
 You need to add `REVUE_API_KEY` in your `.env.local`.
 
@@ -6612,7 +6426,7 @@ export default function ShareOnSocialMedia({
     </>
   );
 }
-```
+````
 
 **Creating `useShare` hook**
 
@@ -6625,12 +6439,12 @@ function useShare() {
   // state for share supports
   const [isShareSupported, setIsShareSupported] = useState(null);
 
-  // checking if that exist or not
-  useEffect(() => {
-    setIsShareSupported(() => (window.navigator.share ? true : false));
-  }, []);
+// checking if that exist or not
+useEffect(() => {
+setIsShareSupported(() => (window.navigator.share ? true : false));
+}, []);
 
-  return { isShareSupported };
+return { isShareSupported };
 }
 
 export default useShare;
@@ -6805,25 +6619,23 @@ export default function NextAndPreviousButton({
 }
 
 function BlogPageButton({ href, title, type }) {
-  return (
-    <Link title={title} href={href} passHref>
-      <a
-        className={`flex ${
+return (
+<Link title={title} href={href} passHref>
+<a
+className={`flex ${
           type === "previous" && "flex-row-reverse"
-        } justify-between bg-neutral-800 hover:bg-black !no-underline p-3 rounded-md active:scale-95 transition w-full shadow dark:hover:ring-1 dark:ring-white`}
-      >
-        <div
-          className={`flex flex-col gap-1 ${
+        } justify-between bg-neutral-800 hover:bg-black !no-underline p-3 rounded-md active:scale-95 transition w-full shadow dark:hover:ring-1 dark:ring-white`} >
+<div
+className={`flex flex-col gap-1 ${
             type === "previous" && "text-right"
-          }`}
-        >
-          <p className="text-gray-300  !my-0 capitalize text-sm sm:font-light">
-            {type} Article
-          </p>
-          <p className="text-white font-bold sm:font-medium !my-0 text-base">
-            {title}
-          </p>
-        </div>
+          }`} >
+<p className="text-gray-300  !my-0 capitalize text-sm sm:font-light">
+{type} Article
+</p>
+<p className="text-white font-bold sm:font-medium !my-0 text-base">
+{title}
+</p>
+</div>
 
         <IoArrowForwardSharp
           className={`bg-white text-black p-2 rounded-full w-8 h-8 self-center ${
@@ -6832,9 +6644,11 @@ function BlogPageButton({ href, title, type }) {
         />
       </a>
     </Link>
-  );
+
+);
 }
-```
+
+````
 
 #### Pre
 
@@ -6918,7 +6732,7 @@ const Pre = (props) => {
 };
 
 export default Pre;
-```
+````
 
 #### Step
 
@@ -7008,31 +6822,20 @@ export default function YouTube({ id }) {
 #### Export MDXComponents
 
 <CodeTitle title="components/MDXComponents/index.js" lang="jsx" />
-```jsx
-import Codepen from "./Codepen";
-import Figcaption from "./Figcaption";
-import Warning from "./Warning";
-import Danger from "./Danger";
-import CodeTitle from "./CodeTitle";
-import Tip from "./Tip";
-import Pre from "./Pre";
-import Step from "./Step";
-import CodeSandbox from "./CodeSandbox";
-import NextAndPreviousButton from "./NextAndPreviousButton";
-import YouTube from "./YouTube";
+```jsx import Codepen from "./Codepen"; import Figcaption from "./Figcaption"; import Warning from "./Warning"; import Danger from "./Danger"; import CodeTitle from "./CodeTitle"; import Tip from "./Tip"; import Pre from "./Pre"; import Step from "./Step"; import CodeSandbox from "./CodeSandbox"; import NextAndPreviousButton from "./NextAndPreviousButton"; import YouTube from "./YouTube";
 
 const MDXComponents = {
-  Codepen,
-  Figcaption,
-  Warning,
-  Danger,
-  CodeTitle,
-  Tip,
-  Step,
-  CodeSandbox,
-  NextAndPreviousButton,
-  YouTube,
-  pre: Pre,
+Codepen,
+Figcaption,
+Warning,
+Danger,
+CodeTitle,
+Tip,
+Step,
+CodeSandbox,
+NextAndPreviousButton,
+YouTube,
+pre: Pre,
 };
 
 export default MDXComponents;
@@ -7043,17 +6846,9 @@ export default MDXComponents;
 I have created this page that talks about me. At the end of the page, there is a Support me Section which will be created later.
 
 <CodeTitle title="pages/about.js" lang="jsx" />
-```jsx
-import MDXComponents from "@components/";
-import MetaData from "@components/MetaData";
-import PageTop from "@components/PageTop";
-import Support from "@components/Support"; //===> not created yet
-import MDXContent from "@lib/MDXContent";
-import { MDXRemote } from "next-mdx-remote";
-import styles from "@styles/Blog.module.css";
-import AnimatedDiv from "@components/FramerMotion/AnimatedDiv";
-import { opacityVariant } from "@content/FramerMotionVariants";
-import pageMeta from "@content/meta";
+```jsx import MDXComponents from "@components/"; import MetaData from "@components/MetaData"; import PageTop from "@components/PageTop"; import Support from "@components/Support"; //===> not created yet import MDXContent from "@lib/MDXContent"; import {MDXRemote} from "next-mdx-remote"; import styles from "@styles/Blog.module.css"; import AnimatedDiv from "@components/FramerMotion/AnimatedDiv"; import {
+  opacityVariant
+} from "@content/FramerMotionVariants"; import pageMeta from "@content/meta";
 
 export default function About({ about }) {
   return (
@@ -7080,7 +6875,8 @@ export default function About({ about }) {
         <Support />
       </section>
     </>
-  );
+
+);
 }
 
 export async function getStaticProps() {
@@ -7088,13 +6884,14 @@ export async function getStaticProps() {
     "about"
   );
 
-  return {
-    props: {
-      about,
-    },
-  };
+return {
+props: {
+about,
+},
+};
 }
-```
+
+````
 
 I have created a Markdown page about me then we fetch that page inside `getStaticProps`. Create `about.mdx` inside `static_pages` directory.
 
@@ -7117,7 +6914,7 @@ image: https://imgur.com/C6GBjJt.png
 ...............................
 ...............................
 ...............................
-```
+````
 
 ### Creating `Support` component
 
@@ -7156,9 +6953,9 @@ import AnimatedDiv from "@components/FramerMotion/AnimatedDiv";
 export default function Support() {
   const [showUPIForm, setShowUPIForm] = useState(false);
 
-  return (
-    <section>
-      <h3 className="my-5 font-bold text-2xl">Support me 💪</h3>
+return (
+<section>
+<h3 className="my-5 font-bold text-2xl">Support me 💪</h3>
 
       <AnimatedDiv
         variants={FadeContainer}
@@ -7207,41 +7004,40 @@ export default function Support() {
         )}
       </AnimatePresence>
     </section>
-  );
+
+);
 }
 
-/* It's the UPI form when you choose UPI  */
+/_ It's the UPI form when you choose UPI _/
 function UPIPaymentForm({ close }) {
-  const [amount, setAmount] = useState("");
-  const [qrValue, setQrValue] = useState("");
+const [amount, setAmount] = useState("");
+const [qrValue, setQrValue] = useState("");
 
-  const { isDarkMode } = useDarkMode();
+const { isDarkMode } = useDarkMode();
 
-  const generatePaymentQR = (e) => {
-    e.preventDefault();
-    setQrValue(
-      `upi://pay?pa=${process.env.NEXT_PUBLIC_UPI}&pn=Alex%20Sharma&am=${amount}&purpose=nothing&cu=INR`
-    );
-  };
+const generatePaymentQR = (e) => {
+e.preventDefault();
+setQrValue(
+`upi://pay?pa=${process.env.NEXT_PUBLIC_UPI}&pn=Alex%20Sharma&am=${amount}&purpose=nothing&cu=INR`
+);
+};
 
-  return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      variants={FadeContainer}
-      className="fixed inset-0 bg-black/70 grid place-items-center z-50"
-    >
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={fromTopVariant}
-        exit="hidden"
-        className="m-5 w-[90%] relative  rounded-lg px-5 py-5 max-w-md bg-white dark:bg-darkSecondary"
-      >
-        <button title="Back" onClick={close}>
-          <IoMdArrowRoundBack className="icon m-0" />
-        </button>
+return (
+<motion.div
+initial="hidden"
+animate="visible"
+exit="hidden"
+variants={FadeContainer}
+className="fixed inset-0 bg-black/70 grid place-items-center z-50" >
+<motion.div
+initial="hidden"
+animate="visible"
+variants={fromTopVariant}
+exit="hidden"
+className="m-5 w-[90%] relative rounded-lg px-5 py-5 max-w-md bg-white dark:bg-darkSecondary" >
+<button title="Back" onClick={close}>
+<IoMdArrowRoundBack className="icon m-0" />
+</button>
 
         {!qrValue ? (
           <>
@@ -7311,9 +7107,11 @@ function UPIPaymentForm({ close }) {
         )}
       </motion.div>
     </motion.div>
-  );
+
+);
 }
-```
+
+````
 
 **Creating support content**
 
@@ -7336,7 +7134,7 @@ module.exports = [
     Icon: BsPaypal,
   },
 ];
-```
+````
 
 ## FramerMotion Custom Components
 
@@ -7345,8 +7143,7 @@ In this section, I am going to mention some `framer-motion` custom components wh
 ### AnimatedButton
 
 <CodeTitle title="components/FramerMotion/AnimatedButton.js" lang="jsx" />
-```jsx
-import { motion } from "framer-motion";
+```jsx import {motion} from "framer-motion";
 
 export default function AnimatedButton({
   onClick,
@@ -7373,8 +7170,7 @@ export default function AnimatedButton({
 ### AnimatedDiv
 
 <CodeTitle title="components/FramerMotion/AnimatedDiv.js" lang="jsx" />
-```jsx
-import { motion } from "framer-motion";
+```jsx import {motion} from "framer-motion";
 
 export default function AnimatedDiv({
   variants,
@@ -7402,8 +7198,7 @@ export default function AnimatedDiv({
 ### AnimatedHeading
 
 <CodeTitle title="components/FramerMotion/AnimatedHeading.js" lang="jsx" />
-```jsx
-import { motion } from "framer-motion";
+```jsx import {motion} from "framer-motion";
 
 export default function AnimatedHeading({
   variants,
@@ -7428,8 +7223,7 @@ export default function AnimatedHeading({
 ### AnimatedInput
 
 <CodeTitle title="components/FramerMotion/AnimatedInput.js" lang="jsx" />
-```jsx
-import { motion } from "framer-motion";
+```jsx import {motion} from "framer-motion";
 
 export default function AnimatedInput({
   infinity,
@@ -7455,8 +7249,7 @@ export default function AnimatedInput({
 ### AnimatedLink
 
 <CodeTitle title="components/FramerMotion/AnimatedLink.js" lang="jsx" />
-```jsx
-import { motion } from "framer-motion";
+```jsx import {motion} from "framer-motion";
 
 export default function AnimatedLink({ variants, infinity, children }) {
   return (
@@ -7475,8 +7268,7 @@ export default function AnimatedLink({ variants, infinity, children }) {
 ### AnimatedText
 
 <CodeTitle title="components/FramerMotion/AnimatedText.js" lang="jsx" />
-```jsx
-import { motion } from "framer-motion";
+```jsx import {motion} from "framer-motion";
 
 export default function AnimatedText({
   variants,
@@ -7501,8 +7293,7 @@ export default function AnimatedText({
 ### AnimatedTextArea
 
 <CodeTitle title="components/FramerMotion/AnimatedTextArea.js" lang="jsx" />
-```jsx
-import { motion } from "framer-motion";
+```jsx import {motion} from "framer-motion";
 
 export default function AnimatedTextArea({
   infinity,
@@ -7532,17 +7323,12 @@ A sitemap is a file where you provide information about the pages, videos, and o
 First install [globby](https://www.npmjs.com/package/globby) and [prettier](https://www.npmjs.com/package/prettier).
 
 <CodeTitle title="terminal" lang="bash" />
-```bash
-pnpm i globby prettier
-```
+```bash pnpm i globby prettier ```
 
 **Create `lib/sitemap.js`**
 
 <CodeTitle title="lib/sitemap.js" lang="js" />
-```js
-import { writeFileSync } from "fs";
-import { globby } from "globby";
-import prettier from "prettier";
+```js import {writeFileSync} from "fs"; import {globby} from "globby"; import prettier from "prettier";
 
 export default async function generate() {
   const prettierConfig = await prettier.resolveConfig("./.prettierrc.js");
@@ -7554,17 +7340,17 @@ export default async function generate() {
     "!pages/404.js",
   ]);
 
-  const sitemap = `
-    <?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        ${pages
-          .map((page) => {
-            const path = page
-              .replace("pages", "")
-              .replace("posts", "/blogs")
-              .replace(".js", "")
-              .replace(".mdx", "");
-            const route = path === "/index" ? "" : path;
+const sitemap = `
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${pages
+.map((page) => {
+const path = page
+.replace("pages", "")
+.replace("posts", "/blogs")
+.replace(".js", "")
+.replace(".mdx", "");
+const route = path === "/index" ? "" : path;
 
             return `
               <url>
@@ -7576,15 +7362,16 @@ export default async function generate() {
     </urlset>
     `;
 
-  const formatted = prettier.format(sitemap, {
-    ...prettierConfig,
-    parser: "html",
-  });
+const formatted = prettier.format(sitemap, {
+...prettierConfig,
+parser: "html",
+});
 
-  // eslint-disable-next-line no-sync
-  writeFileSync("public/sitemap.xml", formatted);
+// eslint-disable-next-line no-sync
+writeFileSync("public/sitemap.xml", formatted);
 }
-```
+
+````
 
 The above code creates a sitemap and saves the file inside the `public` directory. Now we just need to call this function which is saved as the RSS.
 
@@ -7598,7 +7385,7 @@ export async function getStaticProps() {
   await generateSitemap(); // calling to generate the sitemap
   // ........
 }
-```
+````
 
 This is all you need to do to generate the sitemap of your website. All the steps are completed now. The one thing that is optional for you is PWA. I made this portfolio as **Progressive Web App**.
 
@@ -7608,13 +7395,7 @@ A progressive web app (PWA) is a website that looks and behaves as if it is a mo
 
 To build that you can follow the following article in which I have explained How you can build your website as PWA. You need to read the following blog before we go further.
 
-
-<EmbedBlog 
-  img="https://imgur.com/grENXm0.png" 
-  text="Convert Next.js app to PWA" 
-  url="/blogs/convert-nextjs-app-to-pwa" 
-/>
-
+<EmbedBlog img="https://imgur.com/grENXm0.png" text="Convert Next.js app to PWA" url="/blogs/convert-nextjs-app-to-pwa" />
 
 After you completely created your website as PWA with the help of the above article. Now I'll take it to the next level. Let's see what I am talking about.
 
@@ -7627,18 +7408,7 @@ First, you will have an option to install this website then as you dive into mor
 I guess you will already have `manifest.json` in the `public` directory. You just need to take some screenshots of your web app and add them to the `public/screenshots` folder. It will look like this:
 
 <CodeTitle title="Files" lang="directory" />
-```text
-my-project/
-└── public/
-    ├── fonts/
-    └── screenshots/
-        ├── blog.png
-        ├── contact.png
-        ├── home.png
-        ├── projects.png
-        ├── stats.png
-        └── utilities.png
-```
+```text my-project/ └── public/ ├── fonts/ └── screenshots/ ├── blog.png ├── contact.png ├── home.png ├── projects.png ├── stats.png └── utilities.png ```
 
 Now you have added these to the folder now you just need to add these paths to the `manifest.json` as shown in the following code:
 
@@ -7692,71 +7462,62 @@ Now you have added these to the folder now you just need to add these paths to t
 Now same as screenshots add the images to `public/shortcuts` directory:
 
 <CodeTitle title="Files" lang="directory" />
-```text
-my-project/
-└── public/
-    ├── fonts/
-    ├── screenshots/
-    └── shortcuts/
-        ├── about.png
-        ├── blog.png
-        └── newsletter.png
-```
+```text my-project/ └── public/ ├── fonts/ ├── screenshots/ └── shortcuts/ ├── about.png ├── blog.png └── newsletter.png ```
 
 **Adding the shortcuts to `manifest.json`**:
 
 <CodeTitle title="public/manifest.json" lang="json" />
-```json
-/* Filename: public/manifest.json */
+```json /* Filename: public/manifest.json */
 
 {
-  "theme_color": "#000",
-  /* .......Other properties... */
-  "icons": [
-    /* ....Icons...... */
-  ],
-  "screenshots": [
-    /* .....Screenshots........ */
-  ]
+"theme_color": "#000",
+/_ .......Other properties... _/
+"icons": [
+/* ....Icons...... */
+],
+"screenshots": [
+/* .....Screenshots........ */
+]
 
-  "shortcuts": [
-    {
-      "name": "Blogs",
-      "url": "/blogs",
-      "icons": [
-        {
-          "src": "shortcuts/blog.png",
-          "sizes": "202x202",
-          "type": "image/png",
-          "purpose": "any"
-        }
-      ]
-    },
-    {
-      "name": "About me",
-      "url": "/about",
-      "icons": [
-        {
-          "src": "shortcuts/about.png",
-          "sizes": "202x202",
-          "type": "image/png",
-          "purpose": "any"
-        }
-      ]
-    },
-    {
-      "name": "Newsletter",
-      "url": "/newsletter",
-      "icons": [
-        {
-          "src": "shortcuts/newsletter.png",
-          "sizes": "202x202",
-          "type": "image/png",
-          "purpose": "any"
-        }
-      ]
-    }
-  ]
+"shortcuts": [
+{
+"name": "Blogs",
+"url": "/blogs",
+"icons": [
+{
+"src": "shortcuts/blog.png",
+"sizes": "202x202",
+"type": "image/png",
+"purpose": "any"
+}
+]
+},
+{
+"name": "About me",
+"url": "/about",
+"icons": [
+{
+"src": "shortcuts/about.png",
+"sizes": "202x202",
+"type": "image/png",
+"purpose": "any"
+}
+]
+},
+{
+"name": "Newsletter",
+"url": "/newsletter",
+"icons": [
+{
+"src": "shortcuts/newsletter.png",
+"sizes": "202x202",
+"type": "image/png",
+"purpose": "any"
+}
+]
+}
+]
+
 ```
 
 Each shortcut will have three properties:
@@ -7770,3 +7531,4 @@ That's all you need to do to create an awesome PWA.
 ## Wrapping up
 
 I know it's a long article. I have tried to explain everything that I can. I hope you enjoyed the article. I might have missed something that should be included because it was a hell of an article. If you have any questions or suggestions regarding the article or even the website then drop them in the comments or contact me on [Twitter](https://twitter.com/scarlett1130_). You can find the code on [Github Repository](https://github.com/scarlett1130/Bio). Show you love by Starring ⭐ the repo.
+```

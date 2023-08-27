@@ -95,7 +95,7 @@ export default function TopNavbar() {
             }}
             className="font-sarina"
           >
-            Alex Ritt
+            Gary Shores
           </motion.p>
         </div>
       </Link>

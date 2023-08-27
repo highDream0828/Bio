@@ -13,7 +13,7 @@ const pageMeta: PageMeta = {
   home: {
     title: "",
     description:
-      "Hi, I am Alex Ritt and I am a full-stack developer with a focus on the backend. I have a strong background in the MERN stack (MongoDB, Express, React, Node.js) and have experience building scalable and maintainable web applications. At the moment, I am pursuing my Master's degree in Computer Science.",
+      "Hi, I am Gary Shores and I am a full-stack developer with a focus on the backend. I have a strong background in the MERN stack (MongoDB, Express, React, Node.js) and have experience building scalable and maintainable web applications. At the moment, I am pursuing my Master's degree in Computer Science.",
     image: "/avatar/show.png",
     keywords: "portfolio alex, portfolio scarlett1130, alex blogs",
   },
@@ -42,7 +42,7 @@ const pageMeta: PageMeta = {
 
   bookmark: {
     title: "Bookmarked Blogs",
-    description: "Bookmarked Blogs of Alex Ritt's blogs by you",
+    description: "Bookmarked Blogs of Gary Shores's blogs by you",
     image: "/avatar/show.png",
     keywords: "bookmark, blogs, ",
   },
@@ -63,7 +63,7 @@ const pageMeta: PageMeta = {
   about: {
     title: "About",
     description:
-      "Hi, I am Alex Ritt and I am a full-stack developer with a focus on the backend. I have a strong background in the MERN stack (MongoDB, Express, React, Node.js) and have experience building scalable and maintainable web applications. At the moment, I am pursuing my Master's degree in Computer Science.",
+      "Hi, I am Gary Shores and I am a full-stack developer with a focus on the backend. I have a strong background in the MERN stack (MongoDB, Express, React, Node.js) and have experience building scalable and maintainable web applications. At the moment, I am pursuing my Master's degree in Computer Science.",
     image: "/avatar/show.png",
     keywords: "about, about me, ",
   },

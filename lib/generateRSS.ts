@@ -7,7 +7,7 @@ export default async function getRSS() {
   const allBlogs = new MDXContent("posts").getAllPosts();
 
   const feed = new RSS({
-    title: "Alex Ritt",
+    title: "Gary Shores",
     description: `I've been writing online since 2021, mostly about web development
             and tech careers. In total, I've written ${allBlogs.length} articles
             till now.`,
@@ -15,7 +15,7 @@ export default async function getRSS() {
     feed_url: `${siteURL}/feed.xml`,
     language: "en",
     pubDate: new Date(),
-    copyright: `All rights reserved ${new Date().getFullYear()}, Alex Ritt`,
+    copyright: `All rights reserved ${new Date().getFullYear()}, Gary Shores`,
   });
 
   allBlogs?.map((post) => {
