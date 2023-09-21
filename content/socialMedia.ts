@@ -1,5 +1,5 @@
 import { SocialPlatform } from "@lib/types";
-import { BsGithub, BsLinkedin } from "react-icons/bs";
+import { BsGithub } from "react-icons/bs";
 import { HiMail } from "react-icons/hi";
 
 const socialMedia: SocialPlatform[] = [
@@ -11,13 +11,13 @@ const socialMedia: SocialPlatform[] = [
   {
     title: "Mail",
     Icon: HiMail,
-    url: "mailto:g.shores223@gmail.com",
+    url: "mailto:d.kien720@outlook.com",
   },
-  {
-    title: "LinkedIn",
-    Icon: BsLinkedin,
-    url: "https://www.linkedin.com/in/gary-shores-b42b56288",
-  },
+  // {
+  //   title: "LinkedIn",
+  //   Icon: BsLinkedin,
+  //   url: "https://www.linkedin.com/in/gary-shores-b42b56288",
+  // },
 ];
 
 export default socialMedia;
