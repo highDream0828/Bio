@@ -95,7 +95,7 @@ export default function TopNavbar() {
             }}
             className="font-sarina"
           >
-            Gary Shores
+            Doan Kien
           </motion.p>
         </div>
       </Link>

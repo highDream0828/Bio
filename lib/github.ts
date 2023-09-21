@@ -17,7 +17,7 @@ const tempData = {
   received_events_url: "https://api.github.com/users/scarlett1130/received_events",
   type: "User",
   site_admin: false,
-  name: "Gary Shores",
+  name: "Doan Kien",
   company: null,
   blog: "Bio",
   location: "India",

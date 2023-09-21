@@ -38,7 +38,7 @@ export default function Post({
       </Head>
       <Metadata
         title={post.meta.title}
-        suffix="Gary Shores"
+        suffix="Doan Kien"
         description={post.meta.excerpt}
         previewImage={post.meta.image}
         keywords={post.meta.keywords}
